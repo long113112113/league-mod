@@ -14,3 +14,5 @@ target/
 result
 
 bin
+
+.agent
