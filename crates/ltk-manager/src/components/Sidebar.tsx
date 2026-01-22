@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { LuHammer, LuLibrary, LuPackage, LuSettings } from "react-icons/lu";
+import { LuHammer, LuLibrary, LuPackage, LuSettings, LuFlaskConical } from "react-icons/lu";
 
 interface SidebarProps {
   appVersion?: string;
@@ -11,6 +11,7 @@ export function Sidebar({ appVersion }: SidebarProps) {
   const navItems = [
     { to: "/", label: "Library", icon: LuLibrary },
     { to: "/creator", label: "Creator", icon: LuHammer },
+    { to: "/demo", label: "Swap Demo", icon: LuFlaskConical },
   ];
 
   const isActive = (path: string) => {
@@ -46,11 +47,10 @@ export function Sidebar({ appVersion }: SidebarProps) {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                active
-                  ? "bg-league-500/10 text-league-400"
-                  : "text-surface-400 hover:bg-surface-800 hover:text-surface-200"
-              }`}
+              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${active
+                ? "bg-league-500/10 text-league-400"
+                : "text-surface-400 hover:bg-surface-800 hover:text-surface-200"
+                }`}
             >
               <Icon className="h-5 w-5" />
               {item.label}
@@ -63,11 +63,10 @@ export function Sidebar({ appVersion }: SidebarProps) {
       <div className="border-t border-surface-800 p-3">
         <Link
           to="/settings"
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-            isActive("/settings")
-              ? "bg-league-500/10 text-league-400"
-              : "text-surface-400 hover:bg-surface-800 hover:text-surface-200"
-          }`}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive("/settings")
+            ? "bg-league-500/10 text-league-400"
+            : "text-surface-400 hover:bg-surface-800 hover:text-surface-200"
+            }`}
         >
           <LuSettings className="h-5 w-5" />
           Settings

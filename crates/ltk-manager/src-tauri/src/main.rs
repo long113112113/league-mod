@@ -104,6 +104,8 @@ fn main() {
             commands::get_patcher_status,
             // WAD
             commands::extract_wad,
+            // Swap
+            commands::extract_base_skin,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

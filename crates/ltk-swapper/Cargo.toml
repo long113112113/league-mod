@@ -1,0 +1,13 @@
+[package]
+name = "ltk-swapper"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wadtools = { path = "../wadtools" }
+ltk_modpkg = { path = "../ltk_modpkg" }
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+anyhow = "1.0"
+regex = "1.10"
+log = "0.4"

@@ -6,7 +6,7 @@ import type { Result } from "@/utils/result";
 // Re-export Result utilities for convenience
 export type { AppError, ErrorCode } from "@/utils/errors";
 export type { Result } from "@/utils/result";
-export { isErr, isOk, match,unwrap, unwrapOr } from "@/utils/result";
+export { isErr, isOk, match, unwrap, unwrapOr } from "@/utils/result";
 
 // Types matching Rust structs
 export interface AppInfo {
@@ -17,6 +17,8 @@ export interface AppInfo {
 export interface Settings {
   leaguePath: string | null;
   modStoragePath: string | null;
+  /** Directory where extracted skins are stored. */
+  extractedSkinsPath: string | null;
   /** Directory where mod projects are stored (for Creator Workshop) */
   workshopPath: string | null;
   theme: "light" | "dark" | "system";

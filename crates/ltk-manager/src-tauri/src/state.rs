@@ -89,6 +89,8 @@ impl Default for SettingsState {
 pub struct Settings {
     pub league_path: Option<PathBuf>,
     pub mod_storage_path: Option<PathBuf>,
+    /// Directory extracted skins are stored.
+    pub extracted_skins_path: Option<PathBuf>,
     /// Directory where mod projects are stored (for Creator Workshop).
     pub workshop_path: Option<PathBuf>,
     pub first_run_complete: bool,

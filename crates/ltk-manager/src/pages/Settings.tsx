@@ -91,6 +91,23 @@ export function Settings() {
     }
   }
 
+  async function handleBrowseExtractedSkins() {
+    if (!settings) return;
+
+    try {
+      const selected = await open({
+        directory: true,
+        title: "Select Extracted Skins Location",
+      });
+
+      if (selected) {
+        saveSettings({ ...settings, extractedSkinsPath: selected as string });
+      }
+    } catch (error) {
+      console.error("Failed to browse:", error);
+    }
+  }
+
   if (isLoading || !settings) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -195,6 +212,33 @@ export function Settings() {
             <p className="text-sm text-surface-500">
               Choose where your installed mods will be stored. Leave empty to use the default
               location.
+            </p>
+          </div>
+        </section>
+
+        {/* Extracted Skins Path */}
+        <section>
+          <h3 className="mb-4 text-lg font-medium text-surface-100">Extracted Skins</h3>
+          <div className="space-y-3">
+            <span className="block text-sm font-medium text-surface-400">Extraction Location</span>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={settings.extractedSkinsPath || ""}
+                readOnly
+                placeholder="Default (app data directory)"
+                className="flex-1 rounded-lg border border-surface-700 bg-surface-800 px-4 py-2.5 text-surface-100 placeholder:text-surface-500"
+              />
+              <IconButton
+                icon={<LuFolderOpen className="h-5 w-5" />}
+                variant="outline"
+                size="lg"
+                onClick={handleBrowseExtractedSkins}
+              />
+            </div>
+            <p className="text-sm text-surface-500">
+              Choose where extracted game files (WADs) will be stored. Leave empty to use the
+              default location.
             </p>
           </div>
         </section>

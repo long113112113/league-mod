@@ -49,9 +49,9 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM0QzJFNzYwMEU5M0VFMTcKUldRWDdwTU9ZT2ZDTkYydDYzQzFSa2tObjczdFBvT21EcUdROWtXTlpIZFJyZ0VjMkdXZGZMRy8K",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVFNEQ5MDcwRTcyNUI0MjAKUldRZ3RDWG5jSkJON3ZEaWhFOTlTOTdHUVd3YzBKYXdBVStJMUllSlNvUnpsUkIyZ0pocGFremcK",
       "endpoints": [
-        "https://github.com/LeagueToolkit/league-mod/releases/latest/download/latest.json"
+        "https://github.com/long113112113/league-mod/releases/latest/download/latest.json"
       ],
       "windows": {
         "installMode": "passive"
