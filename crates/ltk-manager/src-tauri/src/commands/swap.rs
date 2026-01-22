@@ -1,9 +1,10 @@
 use crate::state::SettingsState;
 use camino::Utf8PathBuf;
 use league_toolkit::wad::Wad;
+use ltk_swapper::remap_path;
 use serde::Serialize;
 use std::fs::File;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tauri::{AppHandle, Manager, State};
 use wadtools::{
     commands::{download_hashes, DownloadHashesArgs},
@@ -17,6 +18,236 @@ pub struct ExtractResult {
     path: Option<String>,
     error: Option<String>,
     files_count: Option<usize>,
+}
+
+#[derive(Debug, Serialize, Clone)]
+pub struct SkinInfo {
+    id: u32,
+    name: String,
+    path: String,
+}
+
+#[derive(Debug, Serialize, Clone)]
+pub struct SwapResult {
+    success: bool,
+    mod_path: Option<String>,
+    file_count: usize,
+    error: Option<String>,
+}
+
+/// Helper to get the extracted skins directory using Settings or AppData fallback.
+fn get_extracted_skins_dir(
+    app: &AppHandle,
+    state: &State<'_, SettingsState>,
+) -> Result<PathBuf, String> {
+    let settings = state
+        .0
+        .lock()
+        .map_err(|e| format!("Failed to lock settings: {}", e))?;
+
+    if let Some(path) = &settings.extracted_skins_path {
+        Ok(path.clone())
+    } else {
+        app.path()
+            .app_data_dir()
+            .map(|p| p.join("extracted_skins"))
+            .map_err(|e| format!("Failed to resolve AppData dir: {}", e))
+    }
+}
+
+/// List available extracted skins for a champion.
+#[tauri::command]
+pub async fn get_extracted_skins(
+    app: AppHandle,
+    champion: String,
+    state: State<'_, SettingsState>,
+) -> Result<Vec<SkinInfo>, String> {
+    let base_dir = get_extracted_skins_dir(&app, &state)?;
+    let champion_dir = base_dir
+        .join(&champion)
+        .join("assets")
+        .join("characters")
+        .join(&champion.to_lowercase())
+        .join("skins");
+
+    if !champion_dir.exists() {
+        return Ok(vec![]);
+    }
+
+    let mut skins = Vec::new();
+
+    // Iterate over directories in .../skins/
+    if let Ok(entries) = std::fs::read_dir(champion_dir) {
+        for entry in entries.flatten() {
+            if let Ok(file_type) = entry.file_type() {
+                if file_type.is_dir() {
+                    let name = entry.file_name().to_string_lossy().to_string();
+                    // Identify SkinXX folders
+                    if name.to_lowercase().starts_with("skin") {
+                        if let Ok(id) = name[4..].parse::<u32>() {
+                            // Only list non-base skins (assuming skin00 is base) or maybe list all?
+                            // Usually users want to swap FROM a skin TO base.
+                            // Let's include all found skins.
+                            skins.push(SkinInfo {
+                                id,
+                                name: format!("Skin {:02}", id),
+                                path: entry.path().to_string_lossy().to_string(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Sort by ID
+    skins.sort_by_key(|s| s.id);
+
+    Ok(skins)
+}
+
+/// Prepare swap: Create a mod that swaps `from_skin` to `to_skin` (usually 0/Base).
+#[tauri::command]
+pub async fn prepare_swap(
+    app: AppHandle,
+    champion: String,
+    from_skin: u32,
+    to_skin: u32,
+    state: State<'_, SettingsState>,
+) -> Result<SwapResult, String> {
+    // 1. Resolve paths
+    let extracted_dir = get_extracted_skins_dir(&app, &state)?;
+
+    // Configured mod storage path or fallback
+    let mod_storage_path = {
+        let settings = state
+            .0
+            .lock()
+            .map_err(|e| format!("Failed to lock settings: {}", e))?;
+        if let Some(path) = &settings.mod_storage_path {
+            path.clone()
+        } else {
+            app.path()
+                .app_data_dir()
+                .map(|p| p.join("installed_mods"))
+                .map_err(|e| format!("Failed to resolve AppData dir: {}", e))?
+        }
+    };
+
+    // 2. Heavy lifting in blocking task
+    let result = tokio::task::spawn_blocking(move || {
+        swap_blocking(
+            &champion,
+            from_skin,
+            to_skin,
+            &extracted_dir,
+            &mod_storage_path,
+        )
+    })
+    .await
+    .map_err(|e| format!("Task join error: {}", e))?;
+
+    Ok(result)
+}
+
+fn swap_blocking(
+    champion: &str,
+    from_skin: u32,
+    to_skin: u32,
+    extracted_root: &Path,
+    mod_root: &Path,
+) -> SwapResult {
+    // Source: .../extracted_skins/{Champion}
+    let src_root = extracted_root.join(champion);
+    // Target: .../installed_mods/{Champion}_Swap_{From}_to_{To}
+    let mod_name = format!(
+        "{}_Swap_Review_{:02}_to_{:02}",
+        champion, from_skin, to_skin
+    );
+    let target_root = mod_root.join(&mod_name);
+
+    if !src_root.exists() {
+        return SwapResult {
+            success: false,
+            mod_path: None,
+            file_count: 0,
+            error: Some(format!("Source not found: {:?}", src_root)),
+        };
+    }
+
+    // Clean target if exists
+    if target_root.exists() {
+        let _ = std::fs::remove_dir_all(&target_root);
+    }
+    if let Err(e) = std::fs::create_dir_all(&target_root) {
+        return SwapResult {
+            success: false,
+            mod_path: None,
+            file_count: 0,
+            error: Some(format!("Failed to create mod dir: {}", e)),
+        };
+    }
+
+    let mut file_count = 0;
+
+    // Recursive traversal of source
+    let walker = walkdir::WalkDir::new(&src_root);
+
+    for entry in walker.into_iter().filter_map(|e| e.ok()) {
+        if entry.file_type().is_file() {
+            let path = entry.path();
+
+            // Check if file belongs to Source Skin
+            // We can rely on `remap_path` to decide if it needs remapping
+            // But we should optimize: only process files that actally contain the Skin ID pattern in their path
+            let relative_path = match path.strip_prefix(&src_root) {
+                Ok(p) => p.to_string_lossy().to_string(), // Keep original separators? remap handles slash conversion
+                Err(_) => continue,
+            };
+
+            // Try remapping
+            if let Some(new_relative_path) =
+                remap_path(champion, from_skin, to_skin, &relative_path)
+            {
+                // Determine destination path
+                let dest_path = target_root.join(PathBuf::from(new_relative_path));
+
+                // Create parent dir
+                if let Some(parent) = dest_path.parent() {
+                    if let Err(e) = std::fs::create_dir_all(parent) {
+                        return SwapResult {
+                            success: false,
+                            mod_path: None,
+                            file_count,
+                            error: Some(format!(
+                                "Failed to create parent dir for {:?}: {}",
+                                dest_path, e
+                            )),
+                        };
+                    }
+                }
+
+                // Copy file
+                if let Err(e) = std::fs::copy(path, &dest_path) {
+                    return SwapResult {
+                        success: false,
+                        mod_path: None,
+                        file_count,
+                        error: Some(format!("Failed to copy file {:?}: {}", path, e)),
+                    };
+                }
+
+                file_count += 1;
+            }
+        }
+    }
+
+    SwapResult {
+        success: true,
+        mod_path: Some(target_root.to_string_lossy().to_string()),
+        file_count,
+        error: None,
+    }
 }
 
 /// Extract base skin WAD for a champion.

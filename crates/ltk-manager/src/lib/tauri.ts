@@ -62,6 +62,26 @@ export interface LayerInfo {
   fileCount: number;
 }
 
+export interface ExtractResult {
+  success: boolean;
+  path?: string;
+  error?: string;
+  files_count?: number;
+}
+
+export interface SkinInfo {
+  id: number;
+  name: string;
+  path: string;
+}
+
+export interface SwapResult {
+  success: boolean;
+  mod_path?: string;
+  file_count: number;
+  error?: string;
+}
+
 /**
  * Raw IPC result from Tauri commands.
  * This matches the Rust IpcResult<T> serialization format.
@@ -106,4 +126,11 @@ export const api = {
 
   // Inspector
   inspectModpkg: (filePath: string) => invokeResult<ModpkgInfo>("inspect_modpkg", { filePath }),
+
+  // Swap
+  extractBaseSkin: (champion: string) => invokeResult<ExtractResult>("extract_base_skin", { champion }),
+  getExtractedSkins: (champion: string) => invokeResult<SkinInfo[]>("get_extracted_skins", { champion }),
+  prepareSwap: (champion: string, fromSkin: number, toSkin: number) =>
+    invokeResult<SwapResult>("prepare_swap", { champion, from_skin: fromSkin, to_skin: toSkin }),
 };
+
