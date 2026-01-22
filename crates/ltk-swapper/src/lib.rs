@@ -33,9 +33,3 @@ impl SwapEngine {
         self.remapper.remap(champion, from_skin, to_skin, file_path)
     }
 }
-
-/// Helper function to remap a path without instantiating SwapEngine.
-pub fn remap_path(champion: &str, from_skin: u32, to_skin: u32, file_path: &str) -> Option<String> {
-    let engine = SwapEngine::new();
-    engine.remap_path(champion, from_skin, to_skin, file_path)
-}

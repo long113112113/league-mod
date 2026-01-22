@@ -22,50 +22,35 @@ impl Remapper {
             return None;
         }
 
-        let path_lower = path.to_lowercase().replace('\\', "/");
-        // We use lowercase for matching, but keep original for replacement if needed (though we construct new path)
+        let path = path.replace('\\', "/");
+        let from_id_str = format!("Skin{:02}", from_skin);
 
-        let from_id_str = format!("skin{:02}", from_skin);
-
-        if !path_lower.contains(&from_id_str) {
+        if !path.contains(&from_id_str) {
             return None;
         }
 
-        // Target skin naming: skin00 for folders, "base" for filenames when to_skin is 0
-        let to_folder_str = format!("skin{:02}", to_skin);
+        // Target skin naming: Skin00 for folders, "Base" for filenames when to_skin is 0
+        let to_folder_str = format!("Skin{:02}", to_skin);
         let to_filename_str = if to_skin == 0 {
-            "base".to_string()
+            "Base".to_string()
         } else {
-            format!("skin{:02}", to_skin)
+            format!("Skin{:02}", to_skin)
         };
 
-        // Construct regex-like replacements using simple string ops for robustness
-        // We want to replace "skinXX" with "skinYY" in the folder structure
-        // AND "champion_skinXX" with "champion_base" in the filename
-
-        // 1. Path Replacement (Case insensitive by rebuilding)
-        // We convert the path to parts? Or just replace on the lowercased path and lowercase everything?
-        // League usually handles lowercase fine. Let's try safe lowercase conversion for output.
-
         // Replace folder path segment
-        // "skins/skin05/" -> "skins/skin00/"
-        let new_path = path_lower.replace(
-            &format!("skins/{}/", from_id_str),
-            &format!("skins/{}/", to_folder_str),
+        let new_path = path.replace(
+            &format!("Skins/{}/", from_id_str),
+            &format!("Skins/{}/", to_folder_str),
         );
 
-        // Replace filename pattern: champion_skinXX -> champion_base or champion_skinYY
-        // Logic: champion_skin05 -> champion_base
-        let champion_lower = champion.to_lowercase();
-        let final_path = new_path.replace(
-            &format!("{}_{}", champion_lower, from_id_str),
-            &format!("{}_{}", champion_lower, to_filename_str),
+        // Replace filename pattern: Champion_SkinXX -> Champion_Base or Champion_SkinYY
+        let new_path = new_path.replace(
+            &format!("{}_{}", champion, from_id_str),
+            &format!("{}_{}", champion, to_filename_str),
         );
 
-        if final_path != path_lower {
-            // Capitalize first letter of path parts if we want to be "nice", but usually not strictly required.
-            // But let's return the lowercase path which is safe.
-            Some(final_path)
+        if new_path != path {
+            Some(new_path)
         } else {
             None
         }

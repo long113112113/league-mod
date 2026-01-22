@@ -91,23 +91,6 @@ export function Settings() {
     }
   }
 
-  async function handleBrowseExtractedSkins() {
-    if (!settings) return;
-
-    try {
-      const selected = await open({
-        directory: true,
-        title: "Select Extracted Skins Location",
-      });
-
-      if (selected) {
-        saveSettings({ ...settings, extractedSkinsPath: selected as string });
-      }
-    } catch (error) {
-      console.error("Failed to browse:", error);
-    }
-  }
-
   if (isLoading || !settings) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -233,12 +216,24 @@ export function Settings() {
                 icon={<LuFolderOpen className="h-5 w-5" />}
                 variant="outline"
                 size="lg"
-                onClick={handleBrowseExtractedSkins}
+                onClick={async () => {
+                  if (!settings) return;
+                  try {
+                    const selected = await open({
+                      directory: true,
+                      title: "Select Extracted Skins Location",
+                    });
+                    if (selected) {
+                      saveSettings({ ...settings, extractedSkinsPath: selected as string });
+                    }
+                  } catch (error) {
+                    console.error("Failed to browse:", error);
+                  }
+                }}
               />
             </div>
             <p className="text-sm text-surface-500">
-              Choose where extracted game files (WADs) will be stored. Leave empty to use the
-              default location.
+              Choose where extracted base skins will be saved. Default is <code>AppData/Roaming/dev.leaguetoolkit.manager/extracted_skins</code>.
             </p>
           </div>
         </section>

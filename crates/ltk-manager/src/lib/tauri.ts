@@ -17,7 +17,6 @@ export interface AppInfo {
 export interface Settings {
   leaguePath: string | null;
   modStoragePath: string | null;
-  /** Directory where extracted skins are stored. */
   extractedSkinsPath: string | null;
   /** Directory where mod projects are stored (for Creator Workshop) */
   workshopPath: string | null;
@@ -62,26 +61,6 @@ export interface LayerInfo {
   fileCount: number;
 }
 
-export interface ExtractResult {
-  success: boolean;
-  path?: string;
-  error?: string;
-  files_count?: number;
-}
-
-export interface SkinInfo {
-  id: number;
-  name: string;
-  path: string;
-}
-
-export interface SwapResult {
-  success: boolean;
-  mod_path?: string;
-  file_count: number;
-  error?: string;
-}
-
 /**
  * Raw IPC result from Tauri commands.
  * This matches the Rust IpcResult<T> serialization format.
@@ -106,6 +85,13 @@ async function invokeResult<T>(cmd: string, args?: Record<string, unknown>): Pro
   return toResult(response);
 }
 
+export interface ExtractResult {
+  success: boolean;
+  path: string | null;
+  error: string | null;
+  filesCount: number | null;
+}
+
 // API functions
 export const api = {
   getAppInfo: () => invokeResult<AppInfo>("get_app_info"),
@@ -128,9 +114,27 @@ export const api = {
   inspectModpkg: (filePath: string) => invokeResult<ModpkgInfo>("inspect_modpkg", { filePath }),
 
   // Swap
-  extractBaseSkin: (champion: string) => invokeResult<ExtractResult>("extract_base_skin", { champion }),
-  getExtractedSkins: (champion: string) => invokeResult<SkinInfo[]>("get_extracted_skins", { champion }),
-  prepareSwap: (champion: string, fromSkin: number, toSkin: number) =>
-    invokeResult<SwapResult>("prepare_swap", { champion, from_skin: fromSkin, to_skin: toSkin }),
+  extractBaseSkin: async (champion: string): Promise<Result<ExtractResult>> => {
+    try {
+      const response = await invoke<ExtractResult>("extract_base_skin", { champion });
+      if (response.success) {
+        return { ok: true, value: response };
+      }
+      return {
+        ok: false,
+        error: {
+          code: "INTERNAL_STATE",
+          message: response.error ?? "Unknown extraction error",
+        },
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: {
+          code: "UNKNOWN",
+          message: e instanceof Error ? e.message : String(e),
+        },
+      };
+    }
+  },
 };
-
