@@ -9,6 +9,7 @@ members = [
     "crates/ltk_mod_project",
     "crates/ltk_pki",
     "crates/ltk-manager/src-tauri",
+    "crates/wadtools",
 ]
 
 [workspace.dependencies]

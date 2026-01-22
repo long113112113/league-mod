@@ -102,6 +102,8 @@ fn main() {
             commands::start_patcher,
             commands::stop_patcher,
             commands::get_patcher_status,
+            // WAD
+            commands::extract_wad,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
