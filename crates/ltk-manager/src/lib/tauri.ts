@@ -114,27 +114,5 @@ export const api = {
   inspectModpkg: (filePath: string) => invokeResult<ModpkgInfo>("inspect_modpkg", { filePath }),
 
   // Swap
-  extractBaseSkin: async (champion: string): Promise<Result<ExtractResult>> => {
-    try {
-      const response = await invoke<ExtractResult>("extract_base_skin", { champion });
-      if (response.success) {
-        return { ok: true, value: response };
-      }
-      return {
-        ok: false,
-        error: {
-          code: "INTERNAL_STATE",
-          message: response.error ?? "Unknown extraction error",
-        },
-      };
-    } catch (e) {
-      return {
-        ok: false,
-        error: {
-          code: "UNKNOWN",
-          message: e instanceof Error ? e.message : String(e),
-        },
-      };
-    }
-  },
+
 };

@@ -1,218 +1,146 @@
 use crate::state::SettingsState;
 use camino::Utf8PathBuf;
-use league_toolkit::wad::Wad;
+
+
 use serde::Serialize;
-use std::fs::File;
+
 use std::path::PathBuf;
 use tauri::State;
-use wadtools::{
-    commands::{download_hashes, DownloadHashesArgs},
-    extractor::Extractor,
-    utils::{default_hashtable_dir, WadHashtable},
-};
+
+use walkdir::WalkDir;
 
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct ExtractResult {
+pub struct RemapResult {
     success: bool,
-    path: Option<String>,
+    processed_count: usize,
+    output_path: Option<String>,
     error: Option<String>,
-    files_count: Option<usize>,
 }
 
-/// Extract base skin WAD for a champion.
+/// Extract skin WAD for a champion.
 /// Uses spawn_blocking to avoid freezing the UI during heavy I/O.
+
+/// The actual extraction logic, runs on a blocking thread.
+/// The actual extraction logic, runs on a blocking thread.
+
+/// Remap extracted skin files to Base skin.
 #[tauri::command]
-pub async fn extract_base_skin(
+pub async fn remap_skin(
     app: tauri::AppHandle,
     champion: String,
+    target_skin_id: u32,
     state: State<'_, SettingsState>,
-) -> Result<ExtractResult, String> {
+) -> Result<RemapResult, String> {
     use tauri::Manager;
 
-    // 1. Get League Path and Output Path from settings (quick, on main thread)
-    let (league_path, output_base_dir) = {
+    let (input_dir, output_dir) = {
         let settings_guard = state
             .0
             .lock()
             .map_err(|e| format!("Failed to lock settings: {}", e))?;
 
-        let league = match &settings_guard.league_path {
-            Some(p) => p.clone(),
-            None => {
-                return Ok(ExtractResult {
-                    success: false,
-                    path: None,
-                    error: Some("League path not configured via Settings".to_string()),
-                    files_count: None,
-                })
-            }
+        // Input: Extracted skins path / Champion
+        let extracted_path = match &settings_guard.extracted_skins_path {
+            Some(p) => p.join(&champion),
+            None => match app.path().app_data_dir() {
+                Ok(p) => p.join("extracted_skins").join(&champion),
+                Err(e) => {
+                    return Ok(RemapResult {
+                        success: false,
+                        processed_count: 0,
+                        output_path: None,
+                        error: Some(format!("Failed to determine app data dir: {}", e)),
+                    })
+                }
+            },
         };
 
-        // Default to AppData/extracted_skins if not set
-        let output = match &settings_guard.extracted_skins_path {
+        // Output: Mod Storage / Champion_Swap
+        let mod_storage = match &settings_guard.mod_storage_path {
             Some(p) => p.clone(),
-            None => {
-                // Default: AppData/extracted_skins
-                match app.path().app_data_dir() {
-                    Ok(p) => p.join("extracted_skins"),
-                    Err(e) => {
-                        return Ok(ExtractResult {
-                            success: false,
-                            path: None,
-                            error: Some(format!("Failed to determine app data dir: {}", e)),
-                            files_count: None,
-                        })
-                    }
+            None => match app.path().app_data_dir() {
+                Ok(p) => p.join("mods"),
+                Err(e) => {
+                    return Ok(RemapResult {
+                        success: false,
+                        processed_count: 0,
+                        output_path: None,
+                        error: Some(format!("Failed to determine mod storage dir: {}", e)),
+                    })
                 }
-            }
+            },
         };
-        (league, output)
+
+        (
+            extracted_path,
+            mod_storage.join(format!("{}_Swap", champion)),
+        )
     };
 
-    // 2. Move heavy work to blocking thread pool
+    if !input_dir.exists() {
+        return Ok(RemapResult {
+            success: false,
+            processed_count: 0,
+            output_path: None,
+            error: Some(format!("Input directory not found: {:?}", input_dir)),
+        });
+    }
+
+    // Run remapping on blocking thread
     let result = tokio::task::spawn_blocking(move || {
-        extract_blocking(&champion, &league_path, &output_base_dir)
+        let engine = SwapEngine::new();
+        let mut count = 0;
+
+        for entry in WalkDir::new(&input_dir).into_iter().filter_map(|e| e.ok()) {
+            if entry.file_type().is_file() {
+                let path = entry.path();
+                // Get relative path for remapping logic
+                let relative_path = match path.strip_prefix(&input_dir) {
+                    Ok(p) => p.to_string_lossy().replace('\\', "/"),
+                    Err(_) => continue,
+                };
+
+                // Remap: Target Skin -> Base (0)
+                if let Some(new_relative_path) =
+                    engine.remap_path(&champion, target_skin_id, 0, &relative_path)
+                {
+                    let dest_path = output_dir.join(&new_relative_path);
+
+                    if let Some(parent) = dest_path.parent() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            return RemapResult {
+                                success: false,
+                                processed_count: count,
+                                output_path: None,
+                                error: Some(format!("Failed to create output dir: {}", e)),
+                            };
+                        }
+                    }
+
+                    if let Err(e) = std::fs::copy(path, &dest_path) {
+                        return RemapResult {
+                            success: false,
+                            processed_count: count,
+                            output_path: None,
+                            error: Some(format!("Failed to copy file: {}", e)),
+                        };
+                    }
+
+                    count += 1;
+                }
+            }
+        }
+
+        RemapResult {
+            success: true,
+            processed_count: count,
+            output_path: Some(output_dir.to_string_lossy().to_string()),
+            error: None,
+        }
     })
     .await
     .map_err(|e| format!("Task join error: {}", e))?;
 
     Ok(result)
-}
-
-/// The actual extraction logic, runs on a blocking thread.
-fn extract_blocking(
-    champion: &str,
-    league_path: &PathBuf,
-    output_base_dir: &PathBuf,
-) -> ExtractResult {
-    // Locate the WAD file
-    let wad_path = league_path
-        .join("Game")
-        .join("DATA")
-        .join("FINAL")
-        .join("Champions")
-        .join(format!("{}.wad.client", champion));
-
-    if !wad_path.exists() {
-        return ExtractResult {
-            success: false,
-            error: Some(format!("WAD file not found at: {:?}", wad_path)),
-            path: None,
-            files_count: None,
-        };
-    }
-
-    // Load Hash Table
-    let hashtable_dir = default_hashtable_dir().unwrap_or_else(|| Utf8PathBuf::from("wadtools"));
-    let hashtable_path = hashtable_dir.join("hashes.game.txt");
-
-    // Auto-download hashes if missing
-    if !hashtable_path.as_std_path().exists() {
-        let args = DownloadHashesArgs {
-            hashtable_dir: Some(hashtable_dir.to_string()),
-        };
-
-        if let Err(e) = download_hashes(args) {
-            return ExtractResult {
-                success: false,
-                error: Some(format!("Failed to auto-download hashes: {}", e)),
-                path: None,
-                files_count: None,
-            };
-        }
-    }
-
-    // Load hashtable
-    let mut hashtable = match WadHashtable::new() {
-        Ok(h) => h,
-        Err(e) => {
-            return ExtractResult {
-                success: false,
-                error: Some(format!("Failed to init hashtable: {}", e)),
-                path: None,
-                files_count: None,
-            }
-        }
-    };
-
-    if let Err(e) = hashtable.add_from_dir(&hashtable_dir) {
-        return ExtractResult {
-            success: false,
-            error: Some(format!("Failed to load hashtable: {}", e)),
-            path: None,
-            files_count: None,
-        };
-    }
-
-    // Open WAD file
-    let source = match File::open(&wad_path) {
-        Ok(f) => f,
-        Err(e) => {
-            return ExtractResult {
-                success: false,
-                error: Some(format!("Failed to open WAD: {}", e)),
-                path: None,
-                files_count: None,
-            }
-        }
-    };
-
-    let mut wad = match Wad::mount(&source) {
-        Ok(w) => w,
-        Err(e) => {
-            return ExtractResult {
-                success: false,
-                error: Some(format!("Failed to mount WAD: {}", e)),
-                path: None,
-                files_count: None,
-            }
-        }
-    };
-
-    let (mut decoder, chunks) = wad.decode();
-
-    // Extract to local dir (output_base_dir/{Champion})
-    let output_dir = output_base_dir.join(champion);
-
-    // Create output directory
-    if let Err(e) = std::fs::create_dir_all(&output_dir) {
-        return ExtractResult {
-            success: false,
-            error: Some(format!("Failed to create output dir: {}", e)),
-            path: None,
-            files_count: None,
-        };
-    }
-
-    // Convert to Utf8Path for wadtools
-    let output_dir_utf8 = match Utf8PathBuf::from_path_buf(output_dir.clone()) {
-        Ok(p) => p,
-        Err(_) => {
-            return ExtractResult {
-                success: false,
-                error: Some("Output path contains non-UTF8 characters".to_string()),
-                path: None,
-                files_count: None,
-            }
-        }
-    };
-
-    // Create extractor and extract
-    let mut extractor = Extractor::new(&mut decoder, &hashtable);
-
-    match extractor.extract_chunks(chunks, &output_dir_utf8, None) {
-        Ok(count) => ExtractResult {
-            success: true,
-            path: Some(output_dir.to_string_lossy().to_string()),
-            files_count: Some(count),
-            error: None,
-        },
-        Err(e) => ExtractResult {
-            success: false,
-            error: Some(format!("Extraction failed: {}", e)),
-            path: None,
-            files_count: None,
-        },
-    }
 }
