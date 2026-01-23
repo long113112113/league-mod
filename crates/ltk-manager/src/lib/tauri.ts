@@ -16,10 +16,10 @@ export interface AppInfo {
 
 export interface Settings {
   leaguePath: string | null;
-  modStoragePath: string | null;
-  extractedSkinsPath: string | null;
   /** Directory where mod projects are stored (for Creator Workshop) */
   workshopPath: string | null;
+  /** Workspace directory for storing skin IDs, cache, and other working files */
+  workspacePath: string | null;
   theme: "light" | "dark" | "system";
   firstRunComplete: boolean;
 }
@@ -115,4 +115,25 @@ export const api = {
 
   // Swap
 
+  // Data
+  refreshSkinDatabase: () => invokeResult<UpdateResult>("refresh_skin_database"),
+  getSkinDatabase: () => invokeResult<Record<string, string>>("get_skin_database"),
+  getChampionsWithSkins: () => invokeResult<ChampionWithSkins[]>("get_champions_with_skins"),
+  getChampionIconData: (championId: number) =>
+    invokeResult<string>("get_champion_icon_data", { championId }),
+  checkAndUpdateDatabase: () => invokeResult<UpdateResult>("check_and_update_database"),
 };
+
+export interface UpdateResult {
+  success: boolean;
+  message: string;
+  count: number;
+}
+
+export interface ChampionWithSkins {
+  id: number;
+  name: string;
+  description: string;
+  alias: string;
+  skinCollection: Record<string, string>;
+}

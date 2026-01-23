@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { LuHammer, LuLibrary, LuPackage, LuSettings, LuFlaskConical } from "react-icons/lu";
+import { LuHammer, LuLibrary, LuPackage, LuSettings } from "react-icons/lu";
 
 interface SidebarProps {
   appVersion?: string;
@@ -10,8 +10,7 @@ export function Sidebar({ appVersion }: SidebarProps) {
 
   const navItems = [
     { to: "/", label: "Library", icon: LuLibrary },
-    { to: "/creator", label: "Creator", icon: LuHammer },
-    { to: "/demo", label: "Swap Demo", icon: LuFlaskConical },
+    { to: "/creator", label: "Creator", icon: LuHammer }
   ];
 
   const isActive = (path: string) => {

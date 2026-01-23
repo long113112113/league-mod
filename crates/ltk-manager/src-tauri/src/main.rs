@@ -12,6 +12,7 @@ pub mod patcher;
 mod state;
 mod utils;
 
+use error::IpcResult;
 use patcher::PatcherState;
 use state::SettingsState;
 
@@ -87,6 +88,19 @@ fn main() {
             app.manage(settings_state);
             app.manage(patcher_state);
 
+            // Auto-check for database updates in background
+            let app_handle_clone = app_handle.clone();
+            tauri::async_runtime::spawn(async move {
+                match commands::check_and_update_database(app_handle_clone).await {
+                    IpcResult::Ok { value } => {
+                        tracing::info!("Database check complete: {}", value.message);
+                    }
+                    IpcResult::Err { error } => {
+                        tracing::warn!("Database check failed: {:?}", error);
+                    }
+                }
+            });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -102,6 +116,12 @@ fn main() {
             commands::start_patcher,
             commands::stop_patcher,
             commands::get_patcher_status,
+            // Data
+            commands::refresh_skin_database,
+            commands::get_skin_database,
+            commands::get_champions_with_skins,
+            commands::get_champion_icon_data,
+            commands::check_and_update_database,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

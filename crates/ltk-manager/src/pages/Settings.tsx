@@ -74,22 +74,7 @@ export function Settings() {
     }
   }
 
-  async function handleBrowseModStorage() {
-    if (!settings) return;
 
-    try {
-      const selected = await open({
-        directory: true,
-        title: "Select Mod Storage Location",
-      });
-
-      if (selected) {
-        saveSettings({ ...settings, modStoragePath: selected as string });
-      }
-    } catch (error) {
-      console.error("Failed to browse:", error);
-    }
-  }
 
   if (isLoading || !settings) {
     return (
@@ -172,44 +157,19 @@ export function Settings() {
           </div>
         </section>
 
-        {/* Mod Storage Path */}
-        <section>
-          <h3 className="mb-4 text-lg font-medium text-surface-100">Mod Storage</h3>
-          <div className="space-y-3">
-            <span className="block text-sm font-medium text-surface-400">Storage Location</span>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={settings.modStoragePath || ""}
-                readOnly
-                placeholder="Default (app data directory)"
-                className="flex-1 rounded-lg border border-surface-700 bg-surface-800 px-4 py-2.5 text-surface-100 placeholder:text-surface-500"
-              />
-              <IconButton
-                icon={<LuFolderOpen className="h-5 w-5" />}
-                variant="outline"
-                size="lg"
-                onClick={handleBrowseModStorage}
-              />
-            </div>
-            <p className="text-sm text-surface-500">
-              Choose where your installed mods will be stored. Leave empty to use the default
-              location.
-            </p>
-          </div>
-        </section>
 
-        {/* Extracted Skins Path */}
+
+        {/* Workspace Path */}
         <section>
-          <h3 className="mb-4 text-lg font-medium text-surface-100">Extracted Skins</h3>
+          <h3 className="mb-4 text-lg font-medium text-surface-100">Workspace</h3>
           <div className="space-y-3">
-            <span className="block text-sm font-medium text-surface-400">Extraction Location</span>
+            <span className="block text-sm font-medium text-surface-400">Workspace Path</span>
             <div className="flex gap-2">
               <input
                 type="text"
-                value={settings.extractedSkinsPath || ""}
+                value={settings.workspacePath || ""}
                 readOnly
-                placeholder="Default (app data directory)"
+                placeholder="Not configured"
                 className="flex-1 rounded-lg border border-surface-700 bg-surface-800 px-4 py-2.5 text-surface-100 placeholder:text-surface-500"
               />
               <IconButton
@@ -221,10 +181,10 @@ export function Settings() {
                   try {
                     const selected = await open({
                       directory: true,
-                      title: "Select Extracted Skins Location",
+                      title: "Select Workspace Directory",
                     });
                     if (selected) {
-                      saveSettings({ ...settings, extractedSkinsPath: selected as string });
+                      saveSettings({ ...settings, workspacePath: selected as string });
                     }
                   } catch (error) {
                     console.error("Failed to browse:", error);
@@ -233,10 +193,13 @@ export function Settings() {
               />
             </div>
             <p className="text-sm text-surface-500">
-              Choose where extracted base skins will be saved. Default is <code>AppData/Roaming/dev.leaguetoolkit.manager/extracted_skins</code>.
+              Choose a directory for storing skin IDs, cache files, and other working data. This is
+              required for the skin database feature.
             </p>
           </div>
         </section>
+
+
 
         {/* Theme */}
         <section>
@@ -255,6 +218,46 @@ export function Settings() {
                   {theme}
                 </Button>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Data Management */}
+        <section>
+          <h3 className="mb-4 text-lg font-medium text-surface-100">Data Management</h3>
+          <div className="space-y-3">
+            <span className="block text-sm font-medium text-surface-400">Skin Database</span>
+            <div className="rounded-lg border border-surface-800 bg-surface-900 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium text-surface-100">Champion & Skin Data</h4>
+                  <p className="text-sm text-surface-500">
+                    Update the local database of champions and skins from the remote repository.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={async () => {
+                    try {
+                      const result = await api.refreshSkinDatabase();
+                      const update = unwrapForQuery(result);
+                      if (update.success) {
+                        // Fetch champion data to verify
+                        const championsResult = await api.getChampionsWithSkins();
+                        const champions = unwrapForQuery(championsResult);
+                        console.log(`Loaded ${champions.length} champions with skins`);
+                        alert(`${update.message}\nLoaded ${champions.length} champions!`);
+                      }
+                    } catch (error) {
+                      console.error("Failed to update skin database:", error);
+                      alert("Failed to update skin database. Check console for details.");
+                    }
+                  }}
+                >
+                  Update Database
+                </Button>
+              </div>
             </div>
           </div>
         </section>

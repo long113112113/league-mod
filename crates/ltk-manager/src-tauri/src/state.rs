@@ -88,9 +88,9 @@ impl Default for SettingsState {
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
     pub league_path: Option<PathBuf>,
-    pub mod_storage_path: Option<PathBuf>,
-    pub extracted_skins_path: Option<PathBuf>,
     /// Directory where mod projects are stored (for Creator Workshop).
     pub workshop_path: Option<PathBuf>,
+    /// Workspace directory for storing skin IDs, cache, and other working files.
+    pub workspace_path: Option<PathBuf>,
     pub first_run_complete: bool,
 }
