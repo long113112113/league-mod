@@ -1,9 +1,12 @@
 use crate::error::{AppError, AppResult, IpcResult};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
-use std::fs;
 use std::path::PathBuf;
+use std::sync::Arc;
 use tauri::{AppHandle, Manager};
+use tokio::fs;
+use tokio::sync::Semaphore;
+use tokio::task::JoinSet;
 
 const SKIN_IDS_URL: &str =
     "https://github.com/Alban1911/LeagueSkins/raw/main/resources/vi/skin_ids.json";
@@ -15,10 +18,9 @@ const VERSION_API_URL: &str = "https://ddragon.leagueoflegends.com/api/versions.
 const VERSION_FILENAME: &str = "version.json";
 const CHAMPION_ICONS_URL: &str = 
     "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/";
+const METADATA_URL_TEMPLATE: &str = 
+    "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/vi_vn/v1/champions/{id}.json";
 
-// ...
-
-// Download champion icons từ Community Dragon
 async fn download_champion_icons(
     data_dir: &PathBuf,
     champions: &[ChampionWithSkins],
@@ -28,6 +30,7 @@ async fn download_champion_icons(
     // Tạo folder champion-icons nếu chưa có
     if !icons_dir.exists() {
         fs::create_dir_all(&icons_dir)
+            .await
             .map_err(|e| AppError::Other(format!("Failed to create icons directory: {}", e)))?;
     }
 
@@ -54,7 +57,7 @@ async fn download_champion_icons(
                 if response.status().is_success() {
                     match response.bytes().await {
                         Ok(bytes) => {
-                            if let Err(e) = fs::write(&icon_path, &bytes) {
+                            if let Err(e) = fs::write(&icon_path, &bytes).await {
                                 tracing::warn!("Failed to save icon for {}: {}", champion.name, e);
                             } else {
                                 downloaded += 1;
@@ -92,14 +95,14 @@ async fn download_champion_icons(
 use base64::Engine;
 
 #[tauri::command]
-pub fn get_champion_icon_data(
+pub async fn get_champion_icon_data(
     app_handle: AppHandle,
     champion_id: i32,
 ) -> IpcResult<String> {
-    get_champion_icon_data_inner(&app_handle, champion_id).into()
+    get_champion_icon_data_inner(&app_handle, champion_id).await.into()
 }
 
-fn get_champion_icon_data_inner(
+async fn get_champion_icon_data_inner(
     app_handle: &AppHandle,
     champion_id: i32,
 ) -> AppResult<String> {
@@ -113,6 +116,7 @@ fn get_champion_icon_data_inner(
 
     if icon_path.exists() {
         let bytes = fs::read(&icon_path)
+            .await
             .map_err(|e| AppError::Other(format!("Failed to read icon file: {}", e)))?;
         
         let base64_str = base64::engine::general_purpose::STANDARD.encode(&bytes);
@@ -197,6 +201,7 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
     let data_dir = get_data_dir(app_handle)?;
     if !data_dir.exists() {
         fs::create_dir_all(&data_dir)
+            .await
             .map_err(|e| AppError::Other(format!("Failed to create data dir: {}", e)))?;
     }
 
@@ -228,6 +233,7 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
     // Save skin_ids.json
     let skins_file_path = data_dir.join(SKIN_IDS_FILENAME);
     fs::write(&skins_file_path, skins_text)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to write skin data file: {}", e)))?;
 
     // 2. Fetch và lưu champion_data.json
@@ -258,6 +264,7 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
     // Save champion_data.json
     let champions_file_path = data_dir.join(CHAMPION_DATA_FILENAME);
     fs::write(&champions_file_path, champions_text)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to write champion data file: {}", e)))?;
 
     // Organize và lưu champions_with_skins.json
@@ -270,6 +277,7 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
     
     let organized_file_path = data_dir.join("champions_with_skins.json");
     fs::write(&organized_file_path, organized_json)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to write organized data file: {}", e)))?;
 
     tracing::info!("Saved {} champions with skins to file", organized_count);
@@ -277,22 +285,129 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
     // Download champion icons
     let icons_downloaded = download_champion_icons(&data_dir, &organized_champions).await?;
 
+    // Initialize data folders and download metadata
+    let metadata_count = download_champion_metadata(&data_dir, &organized_champions).await?;
+
     Ok(UpdateResult {
         success: true,
         message: format!(
-            "Updated {} skins, {} champions, {} icons downloaded",
-            skins_count, champions_count, icons_downloaded
+            "Updated {} skins, {} champions, {} icons downloaded, {} metadata files checked",
+            skins_count, champions_count, icons_downloaded, metadata_count
         ),
         count: skins_count,
     })
 }
 
-#[tauri::command]
-pub fn get_skin_database(app_handle: AppHandle) -> IpcResult<HashMap<String, String>> {
-    get_skin_database_inner(&app_handle).into()
+async fn download_champion_metadata(
+    data_dir: &PathBuf,
+    champions: &[ChampionWithSkins],
+) -> AppResult<usize> {
+    let client = reqwest::Client::new();
+    let mut join_set = JoinSet::new();
+    let semaphore = Arc::new(Semaphore::new(50));
+    let mut count = 0;
+
+    for champion in champions {
+        // Skip dummy/invalid champions if any
+        if champion.id <= 0 {
+            continue;
+        }
+
+        let client = client.clone();
+        let champ_id = champion.id;
+        let champ_name = champion.name.clone();
+        let data_dir = data_dir.clone();
+        let permit = semaphore.clone().acquire_owned().await.map_err(|e| {
+            AppError::Other(format!("Failed to acquire semaphore: {}", e))
+        })?;
+
+        join_set.spawn(async move {
+            // Drop permit when the task completes
+            let _permit = permit;
+
+            // Create champion specific folder: data/{id}
+            let champion_dir = data_dir.join("data").join(champ_id.to_string());
+            
+            // Check existence asynchronously
+            if !tokio::fs::try_exists(&champion_dir).await.unwrap_or(false) {
+                if let Err(e) = fs::create_dir_all(&champion_dir).await {
+                     tracing::warn!(
+                        "Failed to create directory for champion {}: {}",
+                        champ_id, e
+                    );
+                    return 0;
+                }
+            }
+
+            let metadata_path = champion_dir.join("metadata.json");
+
+            // Skip if metadata already exists
+            if tokio::fs::try_exists(&metadata_path).await.unwrap_or(false) {
+                return 0;
+            }
+
+            let url = METADATA_URL_TEMPLATE.replace("{id}", &champ_id.to_string());
+            tracing::info!("Downloading metadata for {} from {}", champ_name, url);
+
+            match client.get(&url).send().await {
+                Ok(response) => {
+                    if response.status().is_success() {
+                        match response.text().await {
+                            Ok(text) => {
+                                if let Err(e) = fs::write(&metadata_path, text).await {
+                                    tracing::warn!(
+                                        "Failed to write metadata for {}: {}",
+                                        champ_name,
+                                        e
+                                    );
+                                    0
+                                } else {
+                                    1
+                                }
+                            }
+                            Err(e) => {
+                                tracing::warn!(
+                                    "Failed to read metadata text for {}: {}",
+                                    champ_name,
+                                    e
+                                );
+                                0
+                            }
+                        }
+                    } else {
+                        tracing::warn!(
+                            "Failed to download metadata for {} ({}): HTTP {}",
+                            champ_name,
+                            champ_id,
+                            response.status()
+                        );
+                        0
+                    }
+                }
+                Err(e) => {
+                    tracing::warn!("Failed to fetch metadata for {}: {}", champ_name, e);
+                    0
+                }
+            }
+        });
+    }
+
+    while let Some(result) = join_set.join_next().await {
+        match result {
+            Ok(downloaded) => count += downloaded,
+            Err(e) => tracing::error!("Task join error: {}", e),
+        }
+    }
+
+    Ok(count)
 }
 
-fn get_skin_database_inner(app_handle: &AppHandle) -> AppResult<HashMap<String, String>> {
+#[tauri::command]
+pub async fn get_skin_database(app_handle: AppHandle) -> IpcResult<HashMap<String, String>> {
+    get_skin_database_inner(&app_handle).await.into()
+}
+
+async fn get_skin_database_inner(app_handle: &AppHandle) -> AppResult<HashMap<String, String>> {
     let data_dir = get_data_dir(app_handle)?;
     let file_path = data_dir.join(SKIN_IDS_FILENAME);
 
@@ -301,6 +416,7 @@ fn get_skin_database_inner(app_handle: &AppHandle) -> AppResult<HashMap<String, 
     }
 
     let content = fs::read_to_string(&file_path)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to read skin data file: {}", e)))?;
 
     let skins: HashMap<String, String> = serde_json::from_str(&content)
@@ -359,13 +475,13 @@ fn organize_skins_by_champion(
 }
 
 #[tauri::command]
-pub fn get_champions_with_skins(
+pub async fn get_champions_with_skins(
     app_handle: AppHandle,
 ) -> IpcResult<Vec<ChampionWithSkins>> {
-    get_champions_with_skins_inner(&app_handle).into()
+    get_champions_with_skins_inner(&app_handle).await.into()
 }
 
-fn get_champions_with_skins_inner(
+async fn get_champions_with_skins_inner(
     app_handle: &AppHandle,
 ) -> AppResult<Vec<ChampionWithSkins>> {
     let data_dir = get_data_dir(app_handle)?;
@@ -378,6 +494,7 @@ fn get_champions_with_skins_inner(
     }
 
     let content = fs::read_to_string(&file_path)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to read champions data file: {}", e)))?;
 
     let champions: Vec<ChampionWithSkins> = serde_json::from_str(&content)
@@ -417,7 +534,7 @@ async fn fetch_latest_version() -> AppResult<String> {
 }
 
 // Đọc version đã lưu
-fn load_saved_version(app_handle: &AppHandle) -> AppResult<Option<VersionInfo>> {
+async fn load_saved_version(app_handle: &AppHandle) -> AppResult<Option<VersionInfo>> {
     let data_dir = get_data_dir(app_handle)?;
     let file_path = data_dir.join(VERSION_FILENAME);
 
@@ -426,6 +543,7 @@ fn load_saved_version(app_handle: &AppHandle) -> AppResult<Option<VersionInfo>> 
     }
 
     let content = fs::read_to_string(&file_path)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to read version file: {}", e)))?;
 
     let version_info: VersionInfo = serde_json::from_str(&content)
@@ -435,11 +553,12 @@ fn load_saved_version(app_handle: &AppHandle) -> AppResult<Option<VersionInfo>> 
 }
 
 // Lưu version
-fn save_version(app_handle: &AppHandle, version: &str) -> AppResult<()> {
+async fn save_version(app_handle: &AppHandle, version: &str) -> AppResult<()> {
     let data_dir = get_data_dir(app_handle)?;
     
     if !data_dir.exists() {
         fs::create_dir_all(&data_dir)
+            .await
             .map_err(|e| AppError::Other(format!("Failed to create data dir: {}", e)))?;
     }
 
@@ -453,6 +572,7 @@ fn save_version(app_handle: &AppHandle, version: &str) -> AppResult<()> {
 
     let file_path = data_dir.join(VERSION_FILENAME);
     fs::write(&file_path, json)
+        .await
         .map_err(|e| AppError::Other(format!("Failed to write version file: {}", e)))?;
 
     Ok(())
@@ -473,7 +593,7 @@ async fn check_and_update_database_inner(app_handle: &AppHandle) -> AppResult<Up
     tracing::info!("Latest version: {}", latest_version);
 
     // Kiểm tra version đã lưu
-    let saved_version = load_saved_version(app_handle)?;
+    let saved_version = load_saved_version(app_handle).await?;
 
     let should_update = match saved_version {
         None => {
@@ -500,7 +620,7 @@ async fn check_and_update_database_inner(app_handle: &AppHandle) -> AppResult<Up
         let result = refresh_skin_database_inner(app_handle).await?;
 
         // Lưu version mới
-        save_version(app_handle, &latest_version)?;
+        save_version(app_handle, &latest_version).await?;
 
         Ok(result)
     } else {
