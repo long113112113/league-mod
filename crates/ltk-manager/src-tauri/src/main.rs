@@ -136,6 +136,9 @@ fn main() {
             // Images
             commands::download_champion_images,
             commands::get_skin_image,
+            // Mod Skin
+            commands::mod_skin::download_skin,
+            commands::mod_skin::run_skin,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

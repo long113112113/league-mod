@@ -90,10 +90,10 @@ pub fn start_patcher(
     start_patcher_inner(config, &app_handle, &state).into()
 }
 
-fn start_patcher_inner(
+pub(crate) fn start_patcher_inner(
     config: PatcherConfig,
     app_handle: &AppHandle,
-    state: &State<PatcherState>,
+    state: &PatcherState,
 ) -> AppResult<()> {
     let mut patcher_state = state
         .0
@@ -206,7 +206,7 @@ pub fn stop_patcher(state: State<PatcherState>) -> IpcResult<()> {
     stop_patcher_inner(&state).into()
 }
 
-fn stop_patcher_inner(state: &State<PatcherState>) -> AppResult<()> {
+pub(crate) fn stop_patcher_inner(state: &PatcherState) -> AppResult<()> {
     let mut patcher_state = state
         .0
         .lock()
@@ -244,7 +244,7 @@ pub fn get_patcher_status(state: State<PatcherState>) -> IpcResult<PatcherStatus
     get_patcher_status_inner(&state).into()
 }
 
-fn get_patcher_status_inner(state: &State<PatcherState>) -> AppResult<PatcherStatus> {
+fn get_patcher_status_inner(state: &PatcherState) -> AppResult<PatcherStatus> {
     let patcher_state = state
         .0
         .lock()

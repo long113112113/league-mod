@@ -2,6 +2,10 @@ import { useState } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { SkinImage } from "@/components/SkinImage";
 import type { SkinData } from "@/lib/tauri";
+import { invoke } from "@tauri-apps/api/core";
+import { LuPlay } from "react-icons/lu";
+import { useSetGlobalProgress } from "@/modules/progress/hooks";
+import { useToast } from "@/components/Toast";
 
 interface SkinCardVariantProps {
     championId: number;
@@ -9,6 +13,8 @@ interface SkinCardVariantProps {
 }
 
 export function SkinCardVariant({ championId, skin }: SkinCardVariantProps) {
+    const setProgress = useSetGlobalProgress();
+    const { toast } = useToast();
     const variants = [
         { id: skin.id, name: skin.name, tilePath: skin.tilePath, isChroma: false },
         ...(skin.chromas || []).map(c => ({ ...c, isChroma: true }))
@@ -25,6 +31,52 @@ export function SkinCardVariant({ championId, skin }: SkinCardVariantProps) {
     const handleNext = (e: React.MouseEvent) => {
         e.stopPropagation();
         setCurrentIndex((prev) => (prev === variants.length - 1 ? 0 : prev + 1));
+    };
+
+    const handleDownload = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        // Start progress
+        setProgress({
+            isActive: true,
+            message: `Downloading mod skin for ${skin.name}...`,
+            processed: 0,
+            total: 100
+        });
+        toast({ title: "Started", description: "Skin mod download started", type: "info" });
+
+        try {
+            const res = await invoke("download_skin", {
+                championId: championId,
+                skinId: currentVariant.id
+            });
+            console.log(res);
+
+            // Run skin
+            toast({ title: "Running", description: "Applying skin mod...", type: "info" });
+            setProgress({
+                isActive: true,
+                message: "Starting Patcher...",
+                processed: 100,
+                total: 100
+            });
+
+            await invoke("run_skin", {
+                championId: championId,
+                skinId: currentVariant.id
+            });
+
+            // Complete progress
+            toast({ title: "Success", description: "Skin mod running!", type: "success" });
+
+            // Clear progress after a delay
+            setTimeout(() => setProgress(null), 1500);
+
+        } catch (error) {
+            console.error("Failed to download/run skin:", error);
+            setProgress(null);
+            toast({ title: "Error", description: `Failed to download: ${error}`, type: "error" });
+        }
     };
 
     const hasChromas = variants.length > 1;
@@ -60,6 +112,13 @@ export function SkinCardVariant({ championId, skin }: SkinCardVariantProps) {
                         </div>
                     </>
                 )}
+                <button
+                    onClick={handleDownload}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-500/90 hover:bg-brand-500 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all transform scale-75 group-hover:scale-100 shadow-lg z-10"
+                    title="Run Mod Skin"
+                >
+                    <LuPlay className="w-6 h-6 fill-current" />
+                </button>
             </div>
 
             <div className="text-center">

@@ -2,6 +2,7 @@ mod app;
 mod data;
 mod images;
 mod merge_data;
+pub mod mod_skin;
 mod patcher;
 mod settings;
 

@@ -20,10 +20,10 @@ import type { Champion } from "@/modules/library/api/useChampions";
 export function Library() {
   // Tabs management
   const [tabs, setTabs] = useState<Array<{ id: string; label: string; type: "static" | "champion"; data?: any }>>([
-    { id: "mods", label: "My Mods", type: "static" },
     { id: "champions", label: "Champions", type: "static" },
+    { id: "mods", label: "My Mods", type: "static" },
   ]);
-  const [activeTabId, setActiveTabId] = useState("mods");
+  const [activeTabId, setActiveTabId] = useState("champions");
 
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");

@@ -11,9 +11,11 @@ export function ChampionGrid({ onSelectChampion }: { onSelectChampion?: (champio
     const [searchQuery, setSearchQuery] = useState("");
     const { data: champions = [], isLoading, error } = useChampions();
 
-    const filteredChampions = champions.filter((champion) =>
-        champion.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredChampions = champions
+        .filter((champion) =>
+            champion.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     if (isLoading) {
         return <LoadingState />;
