@@ -8,7 +8,6 @@ pub struct AppInfo {
     pub version: String,
 }
 
-/// Get basic app information.
 #[tauri::command]
 pub fn get_app_info() -> IpcResult<AppInfo> {
     IpcResult::ok(AppInfo {

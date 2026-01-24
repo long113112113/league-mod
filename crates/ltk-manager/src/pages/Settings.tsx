@@ -1,12 +1,13 @@
 import { getRouteApi } from "@tanstack/react-router";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
-import { LuCircleAlert, LuCircleCheck, LuFolderOpen, LuInfo, LuLoader } from "react-icons/lu";
+import { LuCircleAlert, LuCircleCheck, LuFolderOpen, LuInfo, LuLoader, LuSparkles } from "react-icons/lu";
 
 import { Button, IconButton } from "@/components/Button";
 import { api, type Settings as SettingsType } from "@/lib/tauri";
 import { useAppInfo, useSaveSettings, useSettings } from "@/modules/settings";
 import { unwrapForQuery } from "@/utils/query";
+import { useGlobalProgress, useSetGlobalProgress } from "@/modules/progress";
 
 const routeApi = getRouteApi("/settings");
 
@@ -18,6 +19,9 @@ export function Settings() {
 
   const [isDetecting, setIsDetecting] = useState(false);
   const [leaguePathValid, setLeaguePathValid] = useState<boolean | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const globalProgress = useGlobalProgress();
+  const setGlobalProgress = useSetGlobalProgress();
 
   useEffect(() => {
     if (settings?.leaguePath) {
@@ -143,7 +147,7 @@ export function Settings() {
               size="sm"
               onClick={handleAutoDetect}
               loading={isDetecting}
-              left={isDetecting ? undefined : <LuLoader className="h-4 w-4" />}
+              left={isDetecting ? undefined : <LuSparkles className="h-4 w-4" />}
               className="text-brand-400 hover:text-brand-300"
             >
               Auto-detect installation
@@ -228,7 +232,7 @@ export function Settings() {
           <div className="space-y-3">
             <span className="block text-sm font-medium text-surface-400">Skin Database</span>
             <div className="rounded-lg border border-surface-800 bg-surface-900 p-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-4">
                 <div>
                   <h4 className="font-medium text-surface-100">Champion & Skin Data</h4>
                   <p className="text-sm text-surface-500">
@@ -238,24 +242,38 @@ export function Settings() {
                 <Button
                   variant="outline"
                   size="sm"
+                  className="whitespace-nowrap shrink-0"
+                  disabled={isUpdating || !!globalProgress}
                   onClick={async () => {
                     try {
+                      setIsUpdating(true);
+                      setGlobalProgress({
+                        isActive: true,
+                        processed: 0,
+                        total: 1,
+                        message: "Starting update...",
+                      });
                       const result = await api.refreshSkinDatabase();
                       const update = unwrapForQuery(result);
                       if (update.success) {
                         // Fetch champion data to verify
                         const championsResult = await api.getChampionsWithSkins();
                         const champions = unwrapForQuery(championsResult);
+
+                        setIsUpdating(false);
                         console.log(`Loaded ${champions.length} champions with skins`);
                         alert(`${update.message}\nLoaded ${champions.length} champions!`);
+                      } else {
+                        setIsUpdating(false);
                       }
                     } catch (error) {
+                      setIsUpdating(false);
                       console.error("Failed to update skin database:", error);
                       alert("Failed to update skin database. Check console for details.");
                     }
                   }}
                 >
-                  Update Database
+                  {isUpdating || globalProgress ? "Updating..." : "Update Database"}
                 </Button>
               </div>
             </div>

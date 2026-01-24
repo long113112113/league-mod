@@ -1,0 +1,361 @@
+{
+  "id": 1,
+  "name": "Annie",
+  "chooseVoPath": "/lol-game-data/assets/v1/champion-choose-vo/1.ogg",
+  "skins": [
+    {
+      "id": 1000,
+      "isBase": true,
+      "name": "Annie",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/base/images/annie_splash_tile_0.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1001,
+      "isBase": false,
+      "name": "Annie Gô-tích",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin01/images/annie_splash_tile_1.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1002,
+      "isBase": false,
+      "name": "Annie Quàng Khăn Đỏ",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin02/images/annie_splash_tile_2.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1003,
+      "isBase": false,
+      "name": "Annie ở Xứ Thần Tiên",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin03/images/annie_splash_tile_3.jpg",
+      "rarity": "kLegendary"
+    },
+    {
+      "id": 1004,
+      "isBase": false,
+      "name": "Annie Hoa Hậu",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin04/images/annie_splash_tile_4.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1005,
+      "isBase": false,
+      "name": "Annie Lửa Băng",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin05/images/annie_splash_tile_5.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1006,
+      "isBase": false,
+      "name": "Annie Nghịch Đảo",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin06/images/annie_splash_tile_6.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1007,
+      "isBase": false,
+      "name": "Annie Kinh Dị",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin07/images/annie_splash_tile_7.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1008,
+      "isBase": false,
+      "name": "Annie Gấu Trúc",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin08/images/annie_splash_tile_8.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1009,
+      "isBase": false,
+      "name": "Annie Gấu Bé Bỏng",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin09/images/annie_splash_tile_9.jpg",
+      "rarity": "kNoRarity"
+    },
+    {
+      "id": 1010,
+      "isBase": false,
+      "name": "Annie Công Nghệ",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin10/images/annie_splash_tile_10.jpg",
+      "rarity": "kMythic"
+    },
+    {
+      "id": 1011,
+      "isBase": false,
+      "name": "Annie Siêu Nhân Thiên Hà",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin11/images/annie_splash_tile_11.jpg",
+      "rarity": "kEpic"
+    },
+    {
+      "id": 1012,
+      "isBase": false,
+      "name": "Annie Sinh Nhật",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin12/images/annie_splash_tile_12.jpg",
+      "rarity": "kMythic"
+    },
+    {
+      "id": 1013,
+      "isBase": false,
+      "name": "Annie Niên Thú Nguyên Đán",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin13/images/annie_splash_tile_13.jpg",
+      "rarity": "kEpic",
+      "chromas": [
+        {
+          "id": 1014,
+          "name": "Annie Niên Thú Nguyên Đán (Hồng Ngọc)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1014.png"
+        },
+        {
+          "id": 1015,
+          "name": "Annie Niên Thú Nguyên Đán (Mầm Xuân)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1015.png"
+        },
+        {
+          "id": 1016,
+          "name": "Annie Niên Thú Nguyên Đán (Hoàng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1016.png"
+        },
+        {
+          "id": 1017,
+          "name": "Annie Niên Thú Nguyên Đán (Tử Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1017.png"
+        },
+        {
+          "id": 1018,
+          "name": "Annie Niên Thú Nguyên Đán (Lam Bảo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1018.png"
+        },
+        {
+          "id": 1019,
+          "name": "Annie Niên Thú Nguyên Đán (Nham Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1019.png"
+        },
+        {
+          "id": 1020,
+          "name": "Annie Niên Thú Nguyên Đán (Hồng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1020.png"
+        }
+      ]
+    },
+    {
+      "id": 1022,
+      "isBase": false,
+      "name": "Annie Tiệm Trà Ngọt Ngào",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin22/images/annie_splash_tile_22.jpg",
+      "rarity": "kEpic",
+      "chromas": [
+        {
+          "id": 1023,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Hồng Ngọc)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1023.png"
+        },
+        {
+          "id": 1024,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Mắt Mèo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1024.png"
+        },
+        {
+          "id": 1025,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Lục Bảo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1025.png"
+        },
+        {
+          "id": 1026,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Lam Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1026.png"
+        },
+        {
+          "id": 1027,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Tử Thạch)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1027.png"
+        },
+        {
+          "id": 1028,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Hồng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1028.png"
+        },
+        {
+          "id": 1029,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Trân Châu)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1029.png"
+        },
+        {
+          "id": 1030,
+          "name": "Annie Tiệm Trà Ngọt Ngào (Nham Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1030.png"
+        }
+      ]
+    },
+    {
+      "id": 1031,
+      "isBase": false,
+      "name": "Annie Gia Đình Ma Ám",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin31/images/annie_splash_tile_31.jpg",
+      "rarity": "kEpic",
+      "chromas": [
+        {
+          "id": 1032,
+          "name": "Annie Gia Đình Ma Ám (Hồng Ngọc)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1032.png"
+        },
+        {
+          "id": 1033,
+          "name": "Annie Gia Đình Ma Ám (Mắt Mèo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1033.png"
+        },
+        {
+          "id": 1034,
+          "name": "Annie Gia Đình Ma Ám (Lục Bảo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1034.png"
+        },
+        {
+          "id": 1035,
+          "name": "Annie Gia Đình Ma Ám (Lam Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1035.png"
+        },
+        {
+          "id": 1036,
+          "name": "Annie Gia Đình Ma Ám (Hồng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1036.png"
+        },
+        {
+          "id": 1037,
+          "name": "Annie Gia Đình Ma Ám (Tử Thạch)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1037.png"
+        },
+        {
+          "id": 1038,
+          "name": "Annie Gia Đình Ma Ám (Trân Châu)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1038.png"
+        },
+        {
+          "id": 1039,
+          "name": "Annie Gia Đình Ma Ám (Nham Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1039.png"
+        }
+      ]
+    },
+    {
+      "id": 1040,
+      "isBase": false,
+      "name": "Annie Cô Bé Xứ Tuyết",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin40/images/annie_splash_tile_40.jpg",
+      "rarity": "kEpic",
+      "chromas": [
+        {
+          "id": 1041,
+          "name": "Annie Cô Bé Xứ Tuyết (Hồng Ngọc)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1041.png"
+        },
+        {
+          "id": 1042,
+          "name": "Annie Cô Bé Xứ Tuyết (Hồng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1042.png"
+        },
+        {
+          "id": 1043,
+          "name": "Annie Cô Bé Xứ Tuyết (Mắt Mèo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1043.png"
+        },
+        {
+          "id": 1044,
+          "name": "Annie Cô Bé Xứ Tuyết (Lục Bảo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1044.png"
+        },
+        {
+          "id": 1045,
+          "name": "Annie Cô Bé Xứ Tuyết (Lam Bảo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1045.png"
+        },
+        {
+          "id": 1046,
+          "name": "Annie Cô Bé Xứ Tuyết (Lam Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1046.png"
+        },
+        {
+          "id": 1047,
+          "name": "Annie Cô Bé Xứ Tuyết (Cầu Vồng)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1047.png"
+        },
+        {
+          "id": 1048,
+          "name": "Annie Cô Bé Xứ Tuyết (Nham Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1048.png"
+        },
+        {
+          "id": 1049,
+          "name": "Annie Cô Bé Xứ Tuyết (Mùa Đông)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1049.png"
+        }
+      ]
+    },
+    {
+      "id": 1050,
+      "isBase": false,
+      "name": "Annie Công Chúa Chiến Binh",
+      "skinClassification": "kChampion",
+      "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/annie/skins/skin50/images/annie_splash_tile_50.skins_annie_skin50.jpg",
+      "rarity": "kEpic",
+      "chromas": [
+        {
+          "id": 1051,
+          "name": "Annie Công Chúa Chiến Binh (Hồng Ngọc)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1051.png"
+        },
+        {
+          "id": 1052,
+          "name": "Annie Công Chúa Chiến Binh (Hoàng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1052.png"
+        },
+        {
+          "id": 1053,
+          "name": "Annie Công Chúa Chiến Binh (Lam Ngọc)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1053.png"
+        },
+        {
+          "id": 1054,
+          "name": "Annie Công Chúa Chiến Binh (Lam Bảo)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1054.png"
+        },
+        {
+          "id": 1055,
+          "name": "Annie Công Chúa Chiến Binh (Tử Thạch)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1055.png"
+        },
+        {
+          "id": 1056,
+          "name": "Annie Công Chúa Chiến Binh (Hồng Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1056.png"
+        },
+        {
+          "id": 1057,
+          "name": "Annie Công Chúa Chiến Binh (Trân Châu)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1057.png"
+        },
+        {
+          "id": 1058,
+          "name": "Annie Công Chúa Chiến Binh (Nham Tinh)",
+          "tilePath": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-chroma-images/1/1058.png"
+        }
+      ]
+    }
+  ]
+}

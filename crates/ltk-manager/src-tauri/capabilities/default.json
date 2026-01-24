@@ -2,7 +2,9 @@
   "$schema": "https://schema.tauri.app/config/2",
   "identifier": "default",
   "description": "Default capabilities for LTK Manager",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-minimize",
@@ -26,6 +28,17 @@
     "updater:allow-check",
     "updater:allow-download-and-install",
     "process:allow-restart",
-    "process:allow-exit"
+    "process:allow-exit",
+    {
+      "identifier": "fs:allow-read",
+      "allow": [
+        {
+          "path": "$APPDATA/**"
+        },
+        {
+          "path": "$APPDATA"
+        }
+      ]
+    }
   ]
 }

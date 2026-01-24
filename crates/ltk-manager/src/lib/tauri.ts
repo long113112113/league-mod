@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { invoke, convertFileSrc } from "@tauri-apps/api/core";
 
 import type { AppError } from "@/utils/errors";
 import type { Result } from "@/utils/result";
@@ -7,6 +7,7 @@ import type { Result } from "@/utils/result";
 export type { AppError, ErrorCode } from "@/utils/errors";
 export type { Result } from "@/utils/result";
 export { isErr, isOk, match, unwrap, unwrapOr } from "@/utils/result";
+export { convertFileSrc };
 
 // Types matching Rust structs
 export interface AppInfo {
@@ -119,9 +120,14 @@ export const api = {
   refreshSkinDatabase: () => invokeResult<UpdateResult>("refresh_skin_database"),
   getSkinDatabase: () => invokeResult<Record<string, string>>("get_skin_database"),
   getChampionsWithSkins: () => invokeResult<ChampionWithSkins[]>("get_champions_with_skins"),
-  getChampionIconData: (championId: number) =>
-    invokeResult<string>("get_champion_icon_data", { championId }),
+
+
+  getChampionSkins: (championId: number) =>
+    invokeResult<SkinData[]>("get_champion_skins", { championId }),
+  getSkinImage: (championId: number, skinId: number) =>
+    invokeResult<string>("get_skin_image", { championId, skinId }),
   checkAndUpdateDatabase: () => invokeResult<UpdateResult>("check_and_update_database"),
+
 };
 
 export interface UpdateResult {
@@ -134,6 +140,20 @@ export interface ChampionWithSkins {
   id: number;
   name: string;
   description: string;
-  alias: string;
   skinCollection: Record<string, string>;
+}
+
+export interface SkinData {
+  id: number;
+  name: string;
+  tilePath: string;
+  rarity: string;
+  isBase: boolean;
+  chromas: ChromaData[];
+}
+
+export interface ChromaData {
+  id: number;
+  name: string;
+  tilePath: string;
 }

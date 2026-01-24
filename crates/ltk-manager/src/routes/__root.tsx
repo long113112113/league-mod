@@ -5,8 +5,14 @@ import { useEffect } from "react";
 import { useAppInfo, useCheckSetupRequired } from "@/modules/settings";
 import { TitleBar } from "@/modules/shell";
 import { UpdateNotification, useUpdateCheck } from "@/modules/updater";
+import { GlobalProgressBar, GlobalProgressProvider, useProgressListener } from "@/modules/progress";
 
 import { Sidebar } from "../components/Sidebar";
+
+function ProgressListenerWrapper({ children }: { children: React.ReactNode }) {
+  useProgressListener();
+  return <>{children}</>;
+}
 
 function RootLayout() {
   const { data: appInfo } = useAppInfo();
@@ -33,17 +39,22 @@ function RootLayout() {
   }
 
   return (
-    <div className="root flex h-screen flex-col bg-linear-to-br from-surface-900 via-night-600 to-surface-900">
-      <TitleBar />
-      <UpdateNotification updateState={updateState} />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar appVersion={appInfo?.version} />
-        <main className="flex-1 overflow-hidden">
-          <Outlet />
-          <TanStackRouterDevtools />
-        </main>
-      </div>
-    </div>
+    <GlobalProgressProvider>
+      <ProgressListenerWrapper>
+        <div className="root flex h-screen flex-col bg-linear-to-br from-surface-900 via-night-600 to-surface-900">
+          <TitleBar />
+          <UpdateNotification updateState={updateState} />
+          <GlobalProgressBar />
+          <div className="flex flex-1 overflow-hidden">
+            <Sidebar appVersion={appInfo?.version} />
+            <main className="flex-1 overflow-hidden">
+              <Outlet />
+              <TanStackRouterDevtools />
+            </main>
+          </div>
+        </div>
+      </ProgressListenerWrapper>
+    </GlobalProgressProvider>
   );
 }
 

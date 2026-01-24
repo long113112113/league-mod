@@ -1,6 +1,7 @@
 use crate::error::{AppError, AppResult, IpcResult};
+use crate::commands::merge_data::{prune_metadata, RawMetadata};
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::PathBuf;
 use std::sync::Arc;
 use tauri::{AppHandle, Manager};
@@ -11,136 +12,18 @@ use tokio::task::JoinSet;
 const SKIN_IDS_URL: &str =
     "https://github.com/Alban1911/LeagueSkins/raw/main/resources/vi/skin_ids.json";
 const SKIN_IDS_FILENAME: &str = "skin_ids.json";
-const CHAMPION_DATA_URL: &str = 
-    "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-summary.json";
-const CHAMPION_DATA_FILENAME: &str = "champion_data.json";
 const VERSION_API_URL: &str = "https://ddragon.leagueoflegends.com/api/versions.json";
 const VERSION_FILENAME: &str = "version.json";
-const CHAMPION_ICONS_URL: &str = 
-    "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/";
+
 const METADATA_URL_TEMPLATE: &str = 
     "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/vi_vn/v1/champions/{id}.json";
-
-async fn download_champion_icons(
-    data_dir: &PathBuf,
-    champions: &[ChampionWithSkins],
-) -> AppResult<usize> {
-    let icons_dir = data_dir.join(CHAMPION_ICONS_DIR);
-    
-    // Tạo folder champion-icons nếu chưa có
-    if !icons_dir.exists() {
-        fs::create_dir_all(&icons_dir)
-            .await
-            .map_err(|e| AppError::Other(format!("Failed to create icons directory: {}", e)))?;
-    }
-
-    tracing::info!("Downloading champion icons to {:?}", icons_dir);
-
-    let client = reqwest::Client::new();
-    let mut downloaded = 0;
-    let mut skipped = 0;
-
-    for champion in champions {
-        let icon_filename = format!("{}.png", champion.id);
-        let icon_path = icons_dir.join(&icon_filename);
-
-        // Skip nếu đã có file
-        if icon_path.exists() {
-            skipped += 1;
-            continue;
-        }
-
-        let icon_url = format!("{}{}.png", CHAMPION_ICONS_URL, champion.id);
-        
-        match client.get(&icon_url).send().await {
-            Ok(response) => {
-                if response.status().is_success() {
-                    match response.bytes().await {
-                        Ok(bytes) => {
-                            if let Err(e) = fs::write(&icon_path, &bytes).await {
-                                tracing::warn!("Failed to save icon for {}: {}", champion.name, e);
-                            } else {
-                                downloaded += 1;
-                            }
-                        }
-                        Err(e) => {
-                            tracing::warn!("Failed to read icon bytes for {}: {}", champion.name, e);
-                        }
-                    }
-                } else {
-                    tracing::warn!(
-                        "Failed to download icon for {} ({}): HTTP {}",
-                        champion.name,
-                        champion.id,
-                        response.status()
-                    );
-                }
-            }
-            Err(e) => {
-                tracing::warn!("Failed to fetch icon for {}: {}", champion.name, e);
-            }
-        }
-    }
-
-    tracing::info!(
-        "Champion icons: {} downloaded, {} skipped (already exist)",
-        downloaded,
-        skipped
-    );
-
-    Ok(downloaded)
-}
-
-// ... imports
-use base64::Engine;
-
-#[tauri::command]
-pub async fn get_champion_icon_data(
-    app_handle: AppHandle,
-    champion_id: i32,
-) -> IpcResult<String> {
-    get_champion_icon_data_inner(&app_handle, champion_id).await.into()
-}
-
-async fn get_champion_icon_data_inner(
-    app_handle: &AppHandle,
-    champion_id: i32,
-) -> AppResult<String> {
-    let data_dir = get_data_dir(app_handle)?;
-    // Try .png first (community dragon), then .jpg (ddragon if present)
-    let mut icon_path = data_dir.join(CHAMPION_ICONS_DIR).join(format!("{}.png", champion_id));
-    
-    if !icon_path.exists() {
-        icon_path = data_dir.join(CHAMPION_ICONS_DIR).join(format!("{}.jpg", champion_id));
-    }
-
-    if icon_path.exists() {
-        let bytes = fs::read(&icon_path)
-            .await
-            .map_err(|e| AppError::Other(format!("Failed to read icon file: {}", e)))?;
-        
-        let base64_str = base64::engine::general_purpose::STANDARD.encode(&bytes);
-        // Return data URI
-        let mime_type = if icon_path.extension().and_then(|e| e.to_str()) == Some("jpg") {
-            "image/jpeg"
-        } else {
-            "image/png"
-        };
-        Ok(format!("data:{};base64,{}", mime_type, base64_str))
-    } else {
-        Err(AppError::Other(format!(
-            "Icon not found for champion {}. Please refresh the database.",
-            champion_id
-        )))
-    }
-}
-const CHAMPION_ICONS_DIR: &str = "champion-icons";
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct VersionInfo {
     version: String,
     last_updated: String,
+    #[serde(default)]
+    hash_1: String
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -151,26 +34,12 @@ pub struct UpdateResult {
     pub count: usize,
 }
 
-// Struct từ API Community Dragon
-#[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-struct ChampionData {
-    id: i32,
-    name: String,
-    #[serde(default)]
-    description: String,
-    #[serde(default)]
-    alias: String,
-}
-
 // Struct cho champion với skin collection
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ChampionWithSkins {
     pub id: i32,
     pub name: String,
-    pub description: String,
-    pub alias: String,
     pub skin_collection: BTreeMap<String, String>,
 }
 
@@ -205,7 +74,6 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
             .map_err(|e| AppError::Other(format!("Failed to create data dir: {}", e)))?;
     }
 
-    // 1. Fetch và lưu skin_ids.json
     tracing::info!("Fetching skin database from {}", SKIN_IDS_URL);
     let skins_response = reqwest::get(SKIN_IDS_URL)
         .await
@@ -236,40 +104,9 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
         .await
         .map_err(|e| AppError::Other(format!("Failed to write skin data file: {}", e)))?;
 
-    // 2. Fetch và lưu champion_data.json
-    tracing::info!("Fetching champion data from {}", CHAMPION_DATA_URL);
-    let champions_response = reqwest::get(CHAMPION_DATA_URL)
-        .await
-        .map_err(|e| AppError::Other(format!("Failed to fetch champion data: {}", e)))?;
-
-    if !champions_response.status().is_success() {
-        return Err(AppError::Other(format!(
-            "Failed to fetch champion data: HTTP {}",
-            champions_response.status()
-        )));
-    }
-
-    let champions_text = champions_response
-        .text()
-        .await
-        .map_err(|e| AppError::Other(format!("Failed to fetch champion data text: {}", e)))?;
-
-    // Validate JSON
-    let champions: Vec<ChampionData> = serde_json::from_str(&champions_text)
-        .map_err(|e| AppError::Other(format!("Failed to parse champion data JSON: {}", e)))?;
-
-    let champions_count = champions.len();
-    tracing::info!("Fetched {} champions", champions_count);
-
-    // Save champion_data.json
-    let champions_file_path = data_dir.join(CHAMPION_DATA_FILENAME);
-    fs::write(&champions_file_path, champions_text)
-        .await
-        .map_err(|e| AppError::Other(format!("Failed to write champion data file: {}", e)))?;
-
     // Organize và lưu champions_with_skins.json
     tracing::info!("Organizing champions with skins...");
-    let organized_champions = organize_skins_by_champion(skins, champions);
+    let organized_champions = organize_skins_by_champion(skins);
     let organized_count = organized_champions.len();
     
     let organized_json = serde_json::to_string_pretty(&organized_champions)
@@ -283,29 +120,60 @@ async fn refresh_skin_database_inner(app_handle: &AppHandle) -> AppResult<Update
     tracing::info!("Saved {} champions with skins to file", organized_count);
 
     // Download champion icons
-    let icons_downloaded = download_champion_icons(&data_dir, &organized_champions).await?;
+
 
     // Initialize data folders and download metadata
-    let metadata_count = download_champion_metadata(&data_dir, &organized_champions).await?;
+    let metadata_count = download_champion_metadata(app_handle, &data_dir, &organized_champions).await?;
 
     Ok(UpdateResult {
         success: true,
         message: format!(
-            "Updated {} skins, {} champions, {} icons downloaded, {} metadata files checked",
-            skins_count, champions_count, icons_downloaded, metadata_count
+            "Updated {} skins, 0 champions (derived), {} metadata files checked",
+            skins_count, metadata_count
         ),
         count: skins_count,
     })
 }
 
 async fn download_champion_metadata(
+    app_handle: &AppHandle,
     data_dir: &PathBuf,
     champions: &[ChampionWithSkins],
 ) -> AppResult<usize> {
+    use tauri::Emitter;
+
+    #[derive(Clone, Serialize)]
+    struct ProgressPayload {
+        processed: usize,
+        total: usize,
+        message: String,
+    }
+
     let client = reqwest::Client::new();
     let mut join_set = JoinSet::new();
     let semaphore = Arc::new(Semaphore::new(50));
     let mut count = 0;
+
+    // Count total work
+    let total_work = champions.iter().filter(|c| c.id > 0).count();
+    let _ = app_handle.emit("metadata-download-progress", ProgressPayload {
+        processed: 0,
+        total: total_work,
+        message: "Downloading metadata...".into(),
+    });
+
+    // Build skin IDs map for pruning
+    let skin_ids_map: HashMap<i32, HashSet<i32>> = champions
+        .iter()
+        .map(|c| {
+            let skin_ids: HashSet<i32> = c
+                .skin_collection
+                .keys()
+                .filter_map(|id_str| id_str.parse::<i32>().ok())
+                .collect();
+            (c.id, skin_ids)
+        })
+        .collect();
 
     for champion in champions {
         // Skip dummy/invalid champions if any
@@ -317,6 +185,7 @@ async fn download_champion_metadata(
         let champ_id = champion.id;
         let champ_name = champion.name.clone();
         let data_dir = data_dir.clone();
+        let valid_skin_ids = skin_ids_map.get(&champ_id).cloned().unwrap_or_default();
         let permit = semaphore.clone().acquire_owned().await.map_err(|e| {
             AppError::Other(format!("Failed to acquire semaphore: {}", e))
         })?;
@@ -354,7 +223,32 @@ async fn download_champion_metadata(
                     if response.status().is_success() {
                         match response.text().await {
                             Ok(text) => {
-                                if let Err(e) = fs::write(&metadata_path, text).await {
+                                // Parse raw metadata
+                                let raw_metadata: RawMetadata = match serde_json::from_str(&text) {
+                                    Ok(m) => m,
+                                    Err(e) => {
+                                        tracing::warn!(
+                                            "Failed to parse metadata for {}: {}",
+                                            champ_name, e
+                                        );
+                                        return 0;
+                                    }
+                                };
+
+                                let pruned = prune_metadata(raw_metadata, &valid_skin_ids);
+
+                                let pruned_json = match serde_json::to_string_pretty(&pruned) {
+                                    Ok(j) => j,
+                                    Err(e) => {
+                                        tracing::warn!(
+                                            "Failed to serialize pruned metadata for {}: {}",
+                                            champ_name, e
+                                        );
+                                        return 0;
+                                    }
+                                };
+
+                                if let Err(e) = fs::write(&metadata_path, pruned_json).await {
                                     tracing::warn!(
                                         "Failed to write metadata for {}: {}",
                                         champ_name,
@@ -392,7 +286,15 @@ async fn download_champion_metadata(
         });
     }
 
+    let mut processed = 0;
     while let Some(result) = join_set.join_next().await {
+        processed += 1;
+        let _ = app_handle.emit("metadata-download-progress", ProgressPayload {
+            processed,
+            total: total_work,
+            message: format!("Downloading metadata... {}/{}", processed, total_work),
+        });
+
         match result {
             Ok(downloaded) => count += downloaded,
             Err(e) => tracing::error!("Task join error: {}", e),
@@ -429,46 +331,35 @@ async fn get_skin_database_inner(app_handle: &AppHandle) -> AppResult<HashMap<St
 // Organize skins theo champion
 fn organize_skins_by_champion(
     skins: HashMap<String, String>,
-    champions: Vec<ChampionData>,
 ) -> Vec<ChampionWithSkins> {
-    // Tạo HashMap để tra cứu champion theo ID
-    let champion_map: HashMap<i32, ChampionData> = champions
-        .into_iter()
-        .filter(|c| c.id > 0) // Bỏ champion với id <= 0
-        .map(|c| (c.id, c))
-        .collect();
-
-    // Nhóm skins theo champion ID
+    let mut champions_map: HashMap<i32, String> = HashMap::new();
     let mut champion_skins: HashMap<i32, BTreeMap<String, String>> = HashMap::new();
 
-    for (skin_id, skin_name) in skins {
-        // Parse skin ID thành số
-        if let Ok(id) = skin_id.parse::<i32>() {
-            // Lấy champion ID: bỏ 3 số cuối
+    for (skin_id_str, skin_name) in &skins {
+        if let Ok(id) = skin_id_str.parse::<i32>() {
             let champion_id = id / 1000;
-
+            if id % 1000 == 0 {
+                champions_map.insert(champion_id, skin_name.clone());
+            }
             champion_skins
                 .entry(champion_id)
-                .or_insert_with(BTreeMap::new)
-                .insert(skin_id, skin_name);
+                .or_default()
+                .insert(skin_id_str.clone(), skin_name.clone());
         }
     }
 
-    // Tạo danh sách champions với skins
-    let mut result: Vec<ChampionWithSkins> = champion_skins
+    let mut result: Vec<ChampionWithSkins> = champions_map
         .into_iter()
-        .filter_map(|(champion_id, skin_collection)| {
-            champion_map.get(&champion_id).map(|champion| ChampionWithSkins {
-                id: champion.id,
-                name: champion.name.clone(),
-                description: champion.description.clone(),
-                alias: champion.alias.clone(),
+        .map(|(champion_id, name)| {
+            let skin_collection = champion_skins.remove(&champion_id).unwrap_or_default();
+            ChampionWithSkins {
+                id: champion_id,
+                name,
                 skin_collection,
-            })
+            }
         })
         .collect();
 
-    // Sắp xếp theo ID
     result.sort_by_key(|c| c.id);
 
     result
@@ -505,9 +396,6 @@ async fn get_champions_with_skins_inner(
     Ok(champions)
 }
 
-
-
-// Lấy version mới nhất từ API
 async fn fetch_latest_version() -> AppResult<String> {
     tracing::info!("Fetching latest version from {}", VERSION_API_URL);
     
@@ -533,7 +421,6 @@ async fn fetch_latest_version() -> AppResult<String> {
         .ok_or_else(|| AppError::Other("Version list is empty".to_string()))
 }
 
-// Đọc version đã lưu
 async fn load_saved_version(app_handle: &AppHandle) -> AppResult<Option<VersionInfo>> {
     let data_dir = get_data_dir(app_handle)?;
     let file_path = data_dir.join(VERSION_FILENAME);
@@ -552,7 +439,6 @@ async fn load_saved_version(app_handle: &AppHandle) -> AppResult<Option<VersionI
     Ok(Some(version_info))
 }
 
-// Lưu version
 async fn save_version(app_handle: &AppHandle, version: &str) -> AppResult<()> {
     let data_dir = get_data_dir(app_handle)?;
     
@@ -562,9 +448,16 @@ async fn save_version(app_handle: &AppHandle, version: &str) -> AppResult<()> {
             .map_err(|e| AppError::Other(format!("Failed to create data dir: {}", e)))?;
     }
 
+    let current_info = load_saved_version(app_handle).await?.unwrap_or(VersionInfo {
+        version: "".to_string(),
+        last_updated: "".to_string(),
+        hash_1: "".to_string()
+    });
+
     let version_info = VersionInfo {
         version: version.to_string(),
         last_updated: chrono::Utc::now().to_rfc3339(),
+        hash_1: current_info.hash_1
     };
 
     let json = serde_json::to_string_pretty(&version_info)
@@ -578,8 +471,6 @@ async fn save_version(app_handle: &AppHandle, version: &str) -> AppResult<()> {
     Ok(())
 }
 
-/// Check version và tự động update nếu cần
-/// Gọi function này khi app khởi động
 #[tauri::command]
 pub async fn check_and_update_database(app_handle: AppHandle) -> IpcResult<UpdateResult> {
     check_and_update_database_inner(&app_handle).await.into()
@@ -588,11 +479,9 @@ pub async fn check_and_update_database(app_handle: AppHandle) -> IpcResult<Updat
 async fn check_and_update_database_inner(app_handle: &AppHandle) -> AppResult<UpdateResult> {
     tracing::info!("Checking for database updates...");
 
-    // Lấy version mới nhất
     let latest_version = fetch_latest_version().await?;
     tracing::info!("Latest version: {}", latest_version);
 
-    // Kiểm tra version đã lưu
     let saved_version = load_saved_version(app_handle).await?;
 
     let should_update = match saved_version {
@@ -601,7 +490,13 @@ async fn check_and_update_database_inner(app_handle: &AppHandle) -> AppResult<Up
             true
         }
         Some(saved) => {
-            if saved.version != latest_version {
+            let data_folder = get_data_dir(app_handle)?.join("data");
+            let champions_file = get_data_dir(app_handle)?.join("champions_with_skins.json");
+            
+            if !data_folder.exists() || !champions_file.exists() {
+                tracing::info!("Data directory or champions file missing, forcing update");
+                true
+            } else if saved.version != latest_version {
                 tracing::info!(
                     "Version changed: {} -> {}, will update database",
                     saved.version,
@@ -616,10 +511,8 @@ async fn check_and_update_database_inner(app_handle: &AppHandle) -> AppResult<Up
     };
 
     if should_update {
-        // Update database
         let result = refresh_skin_database_inner(app_handle).await?;
 
-        // Lưu version mới
         save_version(app_handle, &latest_version).await?;
 
         Ok(result)
@@ -631,4 +524,70 @@ async fn check_and_update_database_inner(app_handle: &AppHandle) -> AppResult<Up
         })
     }
 }
+
+
+
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChromaData {
+    pub id: i32,
+    pub name: String,
+    pub tile_path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SkinData {
+    pub id: i32,
+    pub name: String,
+    pub tile_path: String,
+    pub rarity: String,
+    pub is_base: bool,
+    #[serde(default)]
+    pub chromas: Vec<ChromaData>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ChampionMetadata {
+    pub id: i32,
+    pub name: String,
+    pub skins: Vec<SkinData>,
+}
+
+#[tauri::command]
+pub async fn get_champion_skins(
+    app_handle: AppHandle,
+    champion_id: i32,
+) -> IpcResult<Vec<SkinData>> {
+    get_champion_skins_inner(&app_handle, champion_id).await.into()
+}
+
+async fn get_champion_skins_inner(
+    app_handle: &AppHandle,
+    champion_id: i32,
+) -> AppResult<Vec<SkinData>> {
+    let data_dir = get_data_dir(app_handle)?;
+    // Path: data/{id}/metadata.json
+    let metadata_path = data_dir
+        .join("data")
+        .join(champion_id.to_string())
+        .join("metadata.json");
+
+    if !tokio::fs::try_exists(&metadata_path).await.unwrap_or(false) {
+        return Ok(Vec::new());
+    }
+
+    let content = fs::read_to_string(&metadata_path)
+        .await
+        .map_err(|e| AppError::Other(format!("Failed to read metadata file: {}", e)))?;
+
+    let metadata: ChampionMetadata = serde_json::from_str(&content)
+        .map_err(|e| AppError::Other(format!("Failed to parse metadata file: {}", e)))?;
+
+    Ok(metadata.skins)
+}
+
 

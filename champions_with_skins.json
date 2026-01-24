@@ -2,8 +2,6 @@
   {
     "id": 1,
     "name": "Annie",
-    "description": "the Dark Child",
-    "alias": "Annie",
     "skinCollection": {
       "1000": "Annie",
       "1001": "Annie Gô-tích",
@@ -68,8 +66,6 @@
   {
     "id": 2,
     "name": "Olaf",
-    "description": "the Berserker",
-    "alias": "Olaf",
     "skinCollection": {
       "2000": "Olaf",
       "2001": "Olaf Kẻ Phản Diện",
@@ -129,8 +125,6 @@
   {
     "id": 3,
     "name": "Galio",
-    "description": "the Colossus",
-    "alias": "Galio",
     "skinCollection": {
       "3000": "Galio",
       "3001": "Galio Ma Pháp",
@@ -184,8 +178,6 @@
   {
     "id": 4,
     "name": "Twisted Fate",
-    "description": "the Card Master",
-    "alias": "TwistedFate",
     "skinCollection": {
       "4000": "Twisted Fate",
       "4001": "PAX Twisted Fate",
@@ -246,8 +238,6 @@
   {
     "id": 5,
     "name": "Xin Zhao",
-    "description": "the Seneschal of Demacia",
-    "alias": "XinZhao",
     "skinCollection": {
       "5000": "Xin Zhao",
       "5001": "Xin Zhao Biệt Kích",
@@ -306,8 +296,6 @@
   {
     "id": 6,
     "name": "Urgot",
-    "description": "the Dreadnought",
-    "alias": "Urgot",
     "skinCollection": {
       "6000": "Urgot",
       "6001": "Urgot Cua Khổng Lồ",
@@ -355,8 +343,6 @@
   {
     "id": 7,
     "name": "LeBlanc",
-    "description": "the Deceiver",
-    "alias": "Leblanc",
     "skinCollection": {
       "7000": "LeBlanc",
       "7001": "LeBlanc Độc Ác",
@@ -422,8 +408,6 @@
   {
     "id": 8,
     "name": "Vladimir",
-    "description": "the Crimson Reaper",
-    "alias": "Vladimir",
     "skinCollection": {
       "8000": "Vladimir",
       "8001": "Bá Tước Vladimir",
@@ -479,8 +463,6 @@
   {
     "id": 9,
     "name": "Fiddlesticks",
-    "description": "the Ancient Fear",
-    "alias": "FiddleSticks",
     "skinCollection": {
       "9000": "Fiddlesticks",
       "9001": "Fiddlesticks Bóng Ma",
@@ -542,8 +524,6 @@
   {
     "id": 10,
     "name": "Kayle",
-    "description": "the Righteous",
-    "alias": "Kayle",
     "skinCollection": {
       "10000": "Kayle",
       "10001": "Kayle Bạc",
@@ -638,8 +618,6 @@
   {
     "id": 11,
     "name": "Master Yi",
-    "description": "the Wuju Bladesman",
-    "alias": "MasterYi",
     "skinCollection": {
       "11000": "Master Yi",
       "11001": "Master Yi Sát Thủ",
@@ -735,8 +713,6 @@
   {
     "id": 12,
     "name": "Alistar",
-    "description": "the Minotaur",
-    "alias": "Alistar",
     "skinCollection": {
       "12000": "Alistar",
       "12001": "Alistar Đen",
@@ -789,8 +765,6 @@
   {
     "id": 13,
     "name": "Ryze",
-    "description": "the Rune Mage",
-    "alias": "Ryze",
     "skinCollection": {
       "13000": "Ryze",
       "13001": "Ryze Niên Thiếu",
@@ -836,8 +810,6 @@
   {
     "id": 14,
     "name": "Sion",
-    "description": "The Undead Juggernaut",
-    "alias": "Sion",
     "skinCollection": {
       "14000": "Sion",
       "14001": "Sion Công Nghệ",
@@ -894,8 +866,6 @@
   {
     "id": 15,
     "name": "Sivir",
-    "description": "the Battle Mistress",
-    "alias": "Sivir",
     "skinCollection": {
       "15000": "Sivir",
       "15001": "Sivir Công Chúa Chiến Binh",
@@ -974,8 +944,6 @@
   {
     "id": 16,
     "name": "Soraka",
-    "description": "the Starchild",
-    "alias": "Soraka",
     "skinCollection": {
       "16000": "Soraka",
       "16001": "Soraka Rừng Xanh",
@@ -1045,8 +1013,6 @@
   {
     "id": 17,
     "name": "Teemo",
-    "description": "the Swift Scout",
-    "alias": "Teemo",
     "skinCollection": {
       "17000": "Teemo",
       "17001": "Teemo Yêu Tinh Giáng Sinh",
@@ -1116,8 +1082,6 @@
   {
     "id": 18,
     "name": "Tristana",
-    "description": "the Yordle Gunner",
-    "alias": "Tristana",
     "skinCollection": {
       "18000": "Tristana",
       "18001": "Riot Girl Tristana",
@@ -1203,8 +1167,6 @@
   {
     "id": 19,
     "name": "Warwick",
-    "description": "the Uncaged Wrath of Zaun",
-    "alias": "Warwick",
     "skinCollection": {
       "19000": "Warwick",
       "19001": "Warwick Xám",
@@ -1263,8 +1225,6 @@
   {
     "id": 20,
     "name": "Nunu & Willump",
-    "description": "the Boy and His Yeti",
-    "alias": "Nunu",
     "skinCollection": {
       "20000": "Nunu & Willump",
       "20001": "Nunu & Willump Khỉ Đột",
@@ -1325,8 +1285,6 @@
   {
     "id": 21,
     "name": "Miss Fortune",
-    "description": "the Bounty Hunter",
-    "alias": "MissFortune",
     "skinCollection": {
       "21000": "Miss Fortune",
       "21001": "Miss Fortune Nữ Cao Bồi",
@@ -1402,8 +1360,6 @@
   {
     "id": 22,
     "name": "Ashe",
-    "description": "the Frost Archer",
-    "alias": "Ashe",
     "skinCollection": {
       "22000": "Ashe",
       "22001": "Ashe Freljord",
@@ -1494,8 +1450,6 @@
   {
     "id": 23,
     "name": "Tryndamere",
-    "description": "the Barbarian King",
-    "alias": "Tryndamere",
     "skinCollection": {
       "23000": "Tryndamere",
       "23001": "Tryndamere Sơn Cước",
@@ -1549,8 +1503,6 @@
   {
     "id": 24,
     "name": "Jax",
-    "description": "Grandmaster at Arms",
-    "alias": "Jax",
     "skinCollection": {
       "24000": "Jax",
       "24001": "Jax Khúc Côn Cầu",
@@ -1599,8 +1551,6 @@
   {
     "id": 25,
     "name": "Morgana",
-    "description": "the Fallen",
-    "alias": "Morgana",
     "skinCollection": {
       "25000": "Morgana",
       "25001": "Morgana Lưu Đày",
@@ -1689,8 +1639,6 @@
   {
     "id": 26,
     "name": "Zilean",
-    "description": "the Chronokeeper",
-    "alias": "Zilean",
     "skinCollection": {
       "26000": "Zilean",
       "26001": "Ông Già Zilean",
@@ -1730,8 +1678,6 @@
   {
     "id": 27,
     "name": "Singed",
-    "description": "the Mad Chemist",
-    "alias": "Singed",
     "skinCollection": {
       "27000": "Singed",
       "27001": "Riot Squad Singed",
@@ -1767,8 +1713,6 @@
   {
     "id": 28,
     "name": "Evelynn",
-    "description": "Agony's Embrace",
-    "alias": "Evelynn",
     "skinCollection": {
       "28000": "Evelynn",
       "28001": "Evelynn Bóng Tối",
@@ -1840,8 +1784,6 @@
   {
     "id": 29,
     "name": "Twitch",
-    "description": "the Plague Rat",
-    "alias": "Twitch",
     "skinCollection": {
       "29000": "Twitch",
       "29001": "Twitch Chuột Chù",
@@ -1907,8 +1849,6 @@
   {
     "id": 30,
     "name": "Karthus",
-    "description": "the Deathsinger",
-    "alias": "Karthus",
     "skinCollection": {
       "30000": "Karthus",
       "30001": "Karthus Bóng Ma",
@@ -1959,8 +1899,6 @@
   {
     "id": 31,
     "name": "Cho'Gath",
-    "description": "the Terror of the Void",
-    "alias": "Chogath",
     "skinCollection": {
       "31000": "Cho'Gath",
       "31001": "Cho'Gath Ác Mộng",
@@ -2009,8 +1947,6 @@
   {
     "id": 32,
     "name": "Amumu",
-    "description": "the Sad Mummy",
-    "alias": "Amumu",
     "skinCollection": {
       "32000": "Amumu",
       "32001": "Amumu Pha-ra-ông",
@@ -2079,8 +2015,6 @@
   {
     "id": 33,
     "name": "Rammus",
-    "description": "the Armordillo",
-    "alias": "Rammus",
     "skinCollection": {
       "33000": "Rammus",
       "33001": "Vua Rammus",
@@ -2122,8 +2056,6 @@
   {
     "id": 34,
     "name": "Anivia",
-    "description": "the Cryophoenix",
-    "alias": "Anivia",
     "skinCollection": {
       "34000": "Anivia",
       "34001": "Anivia Đoàn Kết",
@@ -2185,8 +2117,6 @@
   {
     "id": 35,
     "name": "Shaco",
-    "description": "the Demon Jester",
-    "alias": "Shaco",
     "skinCollection": {
       "35000": "Shaco",
       "35001": "Shaco Ở Xứ Thần Tiên",
@@ -2264,8 +2194,6 @@
   {
     "id": 36,
     "name": "Dr. Mundo",
-    "description": "the Madman of Zaun",
-    "alias": "DrMundo",
     "skinCollection": {
       "36000": "Dr. Mundo",
       "36001": "Dr. Mundo Độc Dược",
@@ -2302,8 +2230,6 @@
   {
     "id": 37,
     "name": "Sona",
-    "description": "Maven of the Strings",
-    "alias": "Sona",
     "skinCollection": {
       "37000": "Sona",
       "37001": "Sona Tiên Nữ",
@@ -2385,8 +2311,6 @@
   {
     "id": 38,
     "name": "Kassadin",
-    "description": "the Void Walker",
-    "alias": "Kassadin",
     "skinCollection": {
       "38000": "Kassadin",
       "38001": "Kassadin Lễ Hội",
@@ -2425,8 +2349,6 @@
   {
     "id": 39,
     "name": "Irelia",
-    "description": "the Blade Dancer",
-    "alias": "Irelia",
     "skinCollection": {
       "39000": "Irelia",
       "39001": "Irelia Sát Thủ",
@@ -2496,8 +2418,6 @@
   {
     "id": 40,
     "name": "Janna",
-    "description": "the Storm's Fury",
-    "alias": "Janna",
     "skinCollection": {
       "40000": "Janna",
       "40001": "Janna Giông Tố",
@@ -2571,8 +2491,6 @@
   {
     "id": 41,
     "name": "Gangplank",
-    "description": "the Saltwater Scourge",
-    "alias": "Gangplank",
     "skinCollection": {
       "41000": "Gangplank",
       "41001": "Hồn Ma Gangplank",
@@ -2621,8 +2539,6 @@
   {
     "id": 42,
     "name": "Corki",
-    "description": "the Daring Bombardier",
-    "alias": "Corki",
     "skinCollection": {
       "42000": "Corki",
       "42001": "Corki Đĩa Bay",
@@ -2674,8 +2590,6 @@
   {
     "id": 43,
     "name": "Karma",
-    "description": "the Enlightened One",
-    "alias": "Karma",
     "skinCollection": {
       "43000": "Karma",
       "43001": "Karma Nữ Thần Mặt Trời",
@@ -2758,8 +2672,6 @@
   {
     "id": 44,
     "name": "Taric",
-    "description": "the Shield of Valoran",
-    "alias": "Taric",
     "skinCollection": {
       "44000": "Taric",
       "44001": "Taric Lục Bảo",
@@ -2802,8 +2714,6 @@
   {
     "id": 45,
     "name": "Veigar",
-    "description": "the Tiny Master of Evil",
-    "alias": "Veigar",
     "skinCollection": {
       "45000": "Veigar",
       "45001": "Veigar Pháp Sư",
@@ -2877,8 +2787,6 @@
   {
     "id": 48,
     "name": "Trundle",
-    "description": "the Troll King",
-    "alias": "Trundle",
     "skinCollection": {
       "48000": "Trundle",
       "48001": "Trundle Bóng Chày",
@@ -2915,8 +2823,6 @@
   {
     "id": 50,
     "name": "Swain",
-    "description": "the Noxian Grand General",
-    "alias": "Swain",
     "skinCollection": {
       "50000": "Swain",
       "50001": "Swain Bắc Cực",
@@ -2965,8 +2871,6 @@
   {
     "id": 51,
     "name": "Caitlyn",
-    "description": "the Sheriff of Piltover",
-    "alias": "Caitlyn",
     "skinCollection": {
       "51000": "Caitlyn",
       "51001": "Caitlyn Du Kích",
@@ -3027,8 +2931,6 @@
   {
     "id": 53,
     "name": "Blitzcrank",
-    "description": "the Great Steam Golem",
-    "alias": "Blitzcrank",
     "skinCollection": {
       "53000": "Blitzcrank",
       "53001": "Blitzcrank Rệu Rã",
@@ -3100,8 +3002,6 @@
   {
     "id": 54,
     "name": "Malphite",
-    "description": "Shard of the Monolith",
-    "alias": "Malphite",
     "skinCollection": {
       "54000": "Malphite",
       "54001": "Malphite Rêu Phong",
@@ -3165,8 +3065,6 @@
   {
     "id": 55,
     "name": "Katarina",
-    "description": "the Sinister Blade",
-    "alias": "Katarina",
     "skinCollection": {
       "55000": "Katarina",
       "55001": "Katarina Đánh Thuê",
@@ -3242,8 +3140,6 @@
   {
     "id": 56,
     "name": "Nocturne",
-    "description": "the Eternal Nightmare",
-    "alias": "Nocturne",
     "skinCollection": {
       "56000": "Nocturne",
       "56001": "Nocturne Băng Giá",
@@ -3286,8 +3182,6 @@
   {
     "id": 57,
     "name": "Maokai",
-    "description": "the Twisted Treant",
-    "alias": "Maokai",
     "skinCollection": {
       "57000": "Maokai",
       "57001": "Maokai Than Củi",
@@ -3329,8 +3223,6 @@
   {
     "id": 58,
     "name": "Renekton",
-    "description": "the Butcher of the Sands",
-    "alias": "Renekton",
     "skinCollection": {
       "58000": "Renekton",
       "58001": "Renekton Ngân Hà",
@@ -3394,8 +3286,6 @@
   {
     "id": 59,
     "name": "Jarvan IV",
-    "description": "the Exemplar of Demacia",
-    "alias": "JarvanIV",
     "skinCollection": {
       "59000": "Jarvan IV",
       "59001": "Jarvan IV Biệt Kích",
@@ -3457,8 +3347,6 @@
   {
     "id": 60,
     "name": "Elise",
-    "description": "the Spider Queen",
-    "alias": "Elise",
     "skinCollection": {
       "60000": "Elise",
       "60001": "Elise Hoa Độc",
@@ -3501,8 +3389,6 @@
   {
     "id": 61,
     "name": "Orianna",
-    "description": "the Lady of Clockwork",
-    "alias": "Orianna",
     "skinCollection": {
       "61000": "Orianna",
       "61001": "Orianna Gô-tích",
@@ -3548,9 +3434,7 @@
   },
   {
     "id": 62,
-    "name": "Wukong",
-    "description": "the Monkey King",
-    "alias": "MonkeyKing",
+    "name": "Ngộ Không",
     "skinCollection": {
       "62000": "Ngộ Không",
       "62001": "Ngộ Không Dung Nham",
@@ -3593,8 +3477,6 @@
   {
     "id": 63,
     "name": "Brand",
-    "description": "the Burning Vengeance",
-    "alias": "Brand",
     "skinCollection": {
       "63000": "Brand",
       "63001": "Brand Tận Thế",
@@ -3654,8 +3536,6 @@
   {
     "id": 64,
     "name": "Lee Sin",
-    "description": "the Blind Monk",
-    "alias": "LeeSin",
     "skinCollection": {
       "64000": "Lee Sin",
       "64001": "Lee Sin Cổ Điển",
@@ -3741,8 +3621,6 @@
   {
     "id": 67,
     "name": "Vayne",
-    "description": "the Night Hunter",
-    "alias": "Vayne",
     "skinCollection": {
       "67000": "Vayne",
       "67001": "Vayne Kẻ Phán Quyết",
@@ -3816,8 +3694,6 @@
   {
     "id": 68,
     "name": "Rumble",
-    "description": "the Mechanized Menace",
-    "alias": "Rumble",
     "skinCollection": {
       "68000": "Rumble",
       "68001": "Rumble Bên Bờ Hồ",
@@ -3856,8 +3732,6 @@
   {
     "id": 69,
     "name": "Cassiopeia",
-    "description": "the Serpent's Embrace",
-    "alias": "Cassiopeia",
     "skinCollection": {
       "69000": "Cassiopeia",
       "69001": "Cassiopeia Nổi Loạn",
@@ -3902,8 +3776,6 @@
   {
     "id": 72,
     "name": "Skarner",
-    "description": "the Primordial Sovereign",
-    "alias": "Skarner",
     "skinCollection": {
       "72000": "Skarner",
       "72001": "Skarner Sa Mạc",
@@ -3925,8 +3797,6 @@
   {
     "id": 74,
     "name": "Heimerdinger",
-    "description": "the Revered Inventor",
-    "alias": "Heimerdinger",
     "skinCollection": {
       "74000": "Heimerdinger",
       "74001": "Heimerdinger Ngoài Hành Tinh",
@@ -3960,8 +3830,6 @@
   {
     "id": 75,
     "name": "Nasus",
-    "description": "the Curator of the Sands",
-    "alias": "Nasus",
     "skinCollection": {
       "75000": "Nasus",
       "75001": "Nasus Ngân Hà",
@@ -4031,8 +3899,6 @@
   {
     "id": 76,
     "name": "Nidalee",
-    "description": "the Bestial Huntress",
-    "alias": "Nidalee",
     "skinCollection": {
       "76000": "Nidalee",
       "76001": "Nidalee Thỏ Tuyết",
@@ -4106,8 +3972,6 @@
   {
     "id": 77,
     "name": "Udyr",
-    "description": "the Spirit Walker",
-    "alias": "Udyr",
     "skinCollection": {
       "77000": "Udyr",
       "77001": "Udyr Đai Đen",
@@ -4126,8 +3990,6 @@
   {
     "id": 78,
     "name": "Poppy",
-    "description": "Keeper of the Hammer",
-    "alias": "Poppy",
     "skinCollection": {
       "78000": "Poppy",
       "78001": "Poppy Noxus",
@@ -4176,8 +4038,6 @@
   {
     "id": 79,
     "name": "Gragas",
-    "description": "the Rabble Rouser",
-    "alias": "Gragas",
     "skinCollection": {
       "79000": "Gragas",
       "79001": "Gragas Thợ Lặn",
@@ -4232,8 +4092,6 @@
   {
     "id": 80,
     "name": "Pantheon",
-    "description": "the Unbreakable Spear",
-    "alias": "Pantheon",
     "skinCollection": {
       "80000": "Pantheon",
       "80001": "Pantheon Myrmidon",
@@ -4287,8 +4145,6 @@
   {
     "id": 81,
     "name": "Ezreal",
-    "description": "the Prodigal Explorer",
-    "alias": "Ezreal",
     "skinCollection": {
       "81000": "Ezreal",
       "81001": "Ezreal Nottingham ",
@@ -4370,8 +4226,6 @@
   {
     "id": 82,
     "name": "Mordekaiser",
-    "description": "the Iron Revenant",
-    "alias": "Mordekaiser",
     "skinCollection": {
       "82000": "Mordekaiser",
       "82001": "Mordekaiser Kị Sĩ Rồng",
@@ -4433,8 +4287,6 @@
   {
     "id": 83,
     "name": "Yorick",
-    "description": "Shepherd of Souls",
-    "alias": "Yorick",
     "skinCollection": {
       "83000": "Yorick",
       "83001": "Yorick Đào Mỏ",
@@ -4500,8 +4352,6 @@
   {
     "id": 84,
     "name": "Akali",
-    "description": "the Rogue Assassin",
-    "alias": "Akali",
     "skinCollection": {
       "84000": "Akali",
       "84001": "Akali Ong Bắp Cày",
@@ -4609,8 +4459,6 @@
   {
     "id": 85,
     "name": "Kennen",
-    "description": "the Heart of the Tempest",
-    "alias": "Kennen",
     "skinCollection": {
       "85000": "Kennen",
       "85001": "Kennen Chết Chóc",
@@ -4651,8 +4499,6 @@
   {
     "id": 86,
     "name": "Garen",
-    "description": "The Might of Demacia",
-    "alias": "Garen",
     "skinCollection": {
       "86000": "Garen",
       "86001": "Garen Huyết Kiếm",
@@ -4713,8 +4559,6 @@
   {
     "id": 89,
     "name": "Leona",
-    "description": "the Radiant Dawn",
-    "alias": "Leona",
     "skinCollection": {
       "89000": "Leona",
       "89001": "Leona Chiến Thần",
@@ -4785,8 +4629,6 @@
   {
     "id": 90,
     "name": "Malzahar",
-    "description": "the Prophet of the Void",
-    "alias": "Malzahar",
     "skinCollection": {
       "90000": "Malzahar",
       "90001": "Malzahar Tể Tướng",
@@ -4851,8 +4693,6 @@
   {
     "id": 91,
     "name": "Talon",
-    "description": "the Blade's Shadow",
-    "alias": "Talon",
     "skinCollection": {
       "91000": "Talon",
       "91001": "Talon Ngoài Vòng Pháp Luật",
@@ -4919,8 +4759,6 @@
   {
     "id": 92,
     "name": "Riven",
-    "description": "the Exile",
-    "alias": "Riven",
     "skinCollection": {
       "92000": "Riven",
       "92001": "Riven Chuộc Tội",
@@ -5000,8 +4838,6 @@
   {
     "id": 96,
     "name": "Kog'Maw",
-    "description": "the Mouth of the Abyss",
-    "alias": "KogMaw",
     "skinCollection": {
       "96000": "Kog'Maw",
       "96001": "Kog'Maw Sâu Róm",
@@ -5073,8 +4909,6 @@
   {
     "id": 98,
     "name": "Shen",
-    "description": "the Eye of Twilight",
-    "alias": "Shen",
     "skinCollection": {
       "98000": "Shen",
       "98001": "Shen Băng Giá",
@@ -5134,8 +4968,6 @@
   {
     "id": 99,
     "name": "Lux",
-    "description": "the Lady of Luminosity",
-    "alias": "Lux",
     "skinCollection": {
       "99000": "Lux",
       "99001": "Lux Phù Thủy",
@@ -5223,8 +5055,6 @@
   {
     "id": 101,
     "name": "Xerath",
-    "description": "the Magus Ascendant",
-    "alias": "Xerath",
     "skinCollection": {
       "101000": "Xerath",
       "101001": "Xerath Cổ Ngữ",
@@ -5263,8 +5093,6 @@
   {
     "id": 102,
     "name": "Shyvana",
-    "description": "the Half-Dragon",
-    "alias": "Shyvana",
     "skinCollection": {
       "102000": "Shyvana",
       "102001": "Shyvana Vảy Sắt",
@@ -5297,8 +5125,6 @@
   {
     "id": 103,
     "name": "Ahri",
-    "description": "the Nine-Tailed Fox",
-    "alias": "Ahri",
     "skinCollection": {
       "103000": "Ahri",
       "103001": "Ahri Hàn Triều",
@@ -5400,8 +5226,6 @@
   {
     "id": 104,
     "name": "Graves",
-    "description": "the Outlaw",
-    "alias": "Graves",
     "skinCollection": {
       "104000": "Graves",
       "104001": "Graves Đánh Thuê",
@@ -5462,8 +5286,6 @@
   {
     "id": 105,
     "name": "Fizz",
-    "description": "the Tidal Trickster",
-    "alias": "Fizz",
     "skinCollection": {
       "105000": "Fizz",
       "105001": "Fizz Cư Dân Át-lan-tích",
@@ -5514,8 +5336,6 @@
   {
     "id": 106,
     "name": "Volibear",
-    "description": "the Relentless Storm",
-    "alias": "Volibear",
     "skinCollection": {
       "106000": "Volibear",
       "106001": "Volibear Thần Sấm",
@@ -5559,8 +5379,6 @@
   {
     "id": 107,
     "name": "Rengar",
-    "description": "the Pridestalker",
-    "alias": "Rengar",
     "skinCollection": {
       "107000": "Rengar",
       "107001": "Rengar Thợ Săn",
@@ -5616,8 +5434,6 @@
   {
     "id": 110,
     "name": "Varus",
-    "description": "the Arrow of Retribution",
-    "alias": "Varus",
     "skinCollection": {
       "110000": "Varus",
       "110001": "Varus Pha Lê Độc",
@@ -5695,8 +5511,6 @@
   {
     "id": 111,
     "name": "Nautilus",
-    "description": "the Titan of the Depths",
-    "alias": "Nautilus",
     "skinCollection": {
       "111000": "Nautilus",
       "111001": "Nautilus Vực Thẳm",
@@ -5749,8 +5563,6 @@
   {
     "id": 112,
     "name": "Viktor",
-    "description": "the Herald of the Arcane",
-    "alias": "Viktor",
     "skinCollection": {
       "112000": "Viktor",
       "112001": "Viktor Người Máy",
@@ -5791,8 +5603,6 @@
   {
     "id": 113,
     "name": "Sejuani",
-    "description": "Fury of the North",
-    "alias": "Sejuani",
     "skinCollection": {
       "113000": "Sejuani",
       "113001": "Sejuani Rừng Xanh",
@@ -5847,8 +5657,6 @@
   {
     "id": 114,
     "name": "Fiora",
-    "description": "the Grand Duelist",
-    "alias": "Fiora",
     "skinCollection": {
       "114000": "Fiora",
       "114001": "Fiora Ngự Lâm Quân",
@@ -5955,8 +5763,6 @@
   {
     "id": 115,
     "name": "Ziggs",
-    "description": "the Hexplosives Expert",
-    "alias": "Ziggs",
     "skinCollection": {
       "115000": "Ziggs",
       "115001": "Ziggs Bác Học Điên",
@@ -6006,8 +5812,6 @@
   {
     "id": 117,
     "name": "Lulu",
-    "description": "the Fae Sorceress",
-    "alias": "Lulu",
     "skinCollection": {
       "117000": "Lulu",
       "117001": "Lulu Bánh Ngọt",
@@ -6070,8 +5874,6 @@
   {
     "id": 119,
     "name": "Draven",
-    "description": "the Glorious Executioner",
-    "alias": "Draven",
     "skinCollection": {
       "119000": "Draven",
       "119001": "Draven Đoạt Mệnh",
@@ -6156,8 +5958,6 @@
   {
     "id": 120,
     "name": "Hecarim",
-    "description": "the Shadow of War",
-    "alias": "Hecarim",
     "skinCollection": {
       "120000": "Hecarim",
       "120001": "Hecarim Kị Sĩ Máu",
@@ -6214,8 +6014,6 @@
   {
     "id": 121,
     "name": "Kha'Zix",
-    "description": "the Voidreaver",
-    "alias": "Khazix",
     "skinCollection": {
       "121000": "Kha'Zix",
       "121001": "Kha'Zix Máy Móc",
@@ -6280,8 +6078,6 @@
   {
     "id": 122,
     "name": "Darius",
-    "description": "the Hand of Noxus",
-    "alias": "Darius",
     "skinCollection": {
       "122000": "Darius",
       "122001": "Chúa Tể Darius",
@@ -6361,8 +6157,6 @@
   {
     "id": 126,
     "name": "Jayce",
-    "description": "the Defender of Tomorrow",
-    "alias": "Jayce",
     "skinCollection": {
       "126000": "Jayce",
       "126001": "Jayce Giả Kim",
@@ -6407,8 +6201,6 @@
   {
     "id": 127,
     "name": "Lissandra",
-    "description": "the Ice Witch",
-    "alias": "Lissandra",
     "skinCollection": {
       "127000": "Lissandra",
       "127001": "Lissandra Huyết Thạch",
@@ -6467,8 +6259,6 @@
   {
     "id": 131,
     "name": "Diana",
-    "description": "Scorn of the Moon",
-    "alias": "Diana",
     "skinCollection": {
       "131000": "Diana",
       "131001": "Diana Chiến Thần Bóng Tối",
@@ -6550,8 +6340,6 @@
   {
     "id": 133,
     "name": "Quinn",
-    "description": "Demacia's Wings",
-    "alias": "Quinn",
     "skinCollection": {
       "133000": "Quinn",
       "133001": "Quinn Phượng Hoàng",
@@ -6582,8 +6370,6 @@
   {
     "id": 134,
     "name": "Syndra",
-    "description": "the Dark Sovereign",
-    "alias": "Syndra",
     "skinCollection": {
       "134000": "Syndra",
       "134001": "Syndra Công Lí",
@@ -6664,8 +6450,6 @@
   {
     "id": 136,
     "name": "Aurelion Sol",
-    "description": "The Star Forger",
-    "alias": "AurelionSol",
     "skinCollection": {
       "136000": "Aurelion Sol",
       "136001": "Aurelion Sol Hỏa Kim Giáp",
@@ -6709,8 +6493,6 @@
   {
     "id": 141,
     "name": "Kayn",
-    "description": "the Shadow Reaper",
-    "alias": "Kayn",
     "skinCollection": {
       "141000": "Kayn",
       "141001": "Kayn Thợ Săn Linh Hồn",
@@ -6748,8 +6530,6 @@
   {
     "id": 142,
     "name": "Zoe",
-    "description": "the Aspect of Twilight",
-    "alias": "Zoe",
     "skinCollection": {
       "142000": "Zoe",
       "142001": "Zoe Thần Đồng Công Nghệ",
@@ -6801,8 +6581,6 @@
   {
     "id": 143,
     "name": "Zyra",
-    "description": "Rise of the Thorns",
-    "alias": "Zyra",
     "skinCollection": {
       "143000": "Zyra",
       "143001": "Zyra Hỏa Mộc",
@@ -6883,8 +6661,6 @@
   {
     "id": 145,
     "name": "Kai'Sa",
-    "description": "Daughter of the Void",
-    "alias": "Kaisa",
     "skinCollection": {
       "145000": "Kai'Sa",
       "145001": "Kai'Sa Thiên Sứ Tương Lai",
@@ -6969,8 +6745,6 @@
   {
     "id": 147,
     "name": "Seraphine",
-    "description": "the Starry-Eyed Songstress",
-    "alias": "Seraphine",
     "skinCollection": {
       "147000": "Seraphine",
       "147001": "K/DA ALL OUT Seraphine - Ca Sĩ Độc Lập",
@@ -7036,8 +6810,6 @@
   {
     "id": 150,
     "name": "Gnar",
-    "description": "the Missing Link",
-    "alias": "Gnar",
     "skinCollection": {
       "150000": "Gnar",
       "150001": "Gnar Khủng Long Con",
@@ -7088,8 +6860,6 @@
   {
     "id": 154,
     "name": "Zac",
-    "description": "the Secret Weapon",
-    "alias": "Zac",
     "skinCollection": {
       "154000": "Zac",
       "154001": "Zac Vũ Khí Đặc Chất",
@@ -7129,8 +6899,6 @@
   {
     "id": 157,
     "name": "Yasuo",
-    "description": "the Unforgiven",
-    "alias": "Yasuo",
     "skinCollection": {
       "157000": "Yasuo",
       "157001": "Yasuo Cao Bồi",
@@ -7225,8 +6993,6 @@
   {
     "id": 161,
     "name": "Vel'Koz",
-    "description": "the Eye of the Void",
-    "alias": "Velkoz",
     "skinCollection": {
       "161000": "Vel'Koz",
       "161001": "Vel'Koz Cỗ Máy Chiến Đấu",
@@ -7262,8 +7028,6 @@
   {
     "id": 163,
     "name": "Taliyah",
-    "description": "the Stoneweaver",
-    "alias": "Taliyah",
     "skinCollection": {
       "163000": "Taliyah",
       "163001": "Taliyah Freljord",
@@ -7295,8 +7059,6 @@
   {
     "id": 164,
     "name": "Camille",
-    "description": "the Steel Shadow",
-    "alias": "Camille",
     "skinCollection": {
       "164000": "Camille",
       "164001": "Camille Siêu Máy Tính",
@@ -7347,8 +7109,6 @@
   {
     "id": 166,
     "name": "Akshan",
-    "description": "the Rogue Sentinel",
-    "alias": "Akshan",
     "skinCollection": {
       "166000": "Akshan",
       "166001": "Akshan Thiên Tài Công Nghệ",
@@ -7376,8 +7136,6 @@
   {
     "id": 200,
     "name": "Bel'Veth",
-    "description": "the Empress of the Void",
-    "alias": "Belveth",
     "skinCollection": {
       "200000": "Bel'Veth",
       "200001": "Bel'Veth Trùm Cuối Bí Ẩn",
@@ -7413,8 +7171,6 @@
   {
     "id": 201,
     "name": "Braum",
-    "description": "the Heart of the Freljord",
-    "alias": "Braum",
     "skinCollection": {
       "201000": "Braum",
       "201001": "Braum Đồ Long",
@@ -7472,8 +7228,6 @@
   {
     "id": 202,
     "name": "Jhin",
-    "description": "the Virtuoso",
-    "alias": "Jhin",
     "skinCollection": {
       "202000": "Jhin",
       "202001": "Jhin Cao Bồi",
@@ -7534,8 +7288,6 @@
   {
     "id": 203,
     "name": "Kindred",
-    "description": "The Eternal Hunters",
-    "alias": "Kindred",
     "skinCollection": {
       "203000": "Kindred",
       "203001": "Kindred Lửa Bóng Tối",
@@ -7585,8 +7337,6 @@
   {
     "id": 221,
     "name": "Zeri",
-    "description": "The Spark of Zaun",
-    "alias": "Zeri",
     "skinCollection": {
       "221000": "Zeri",
       "221001": "Zeri Hồng Tàn Phai",
@@ -7640,8 +7390,6 @@
   {
     "id": 222,
     "name": "Jinx",
-    "description": "the Loose Cannon",
-    "alias": "Jinx",
     "skinCollection": {
       "222000": "Jinx",
       "222001": "Jinx Thế Giới Ngầm",
@@ -7712,8 +7460,6 @@
   {
     "id": 223,
     "name": "Tahm Kench",
-    "description": "The River King",
-    "alias": "TahmKench",
     "skinCollection": {
       "223000": "Tahm Kench",
       "223001": "Tahm Kench Vua Đầu Bếp",
@@ -7758,8 +7504,6 @@
   {
     "id": 233,
     "name": "Briar",
-    "description": "the Restrained Hunger",
-    "alias": "Briar",
     "skinCollection": {
       "233000": "Briar",
       "233001": "Briar Cương Thi Đường Phố",
@@ -7795,8 +7539,6 @@
   {
     "id": 234,
     "name": "Viego",
-    "description": "The Ruined King",
-    "alias": "Viego",
     "skinCollection": {
       "234000": "Viego",
       "234001": "Viego Niên Thú Nguyên Đán",
@@ -7846,8 +7588,6 @@
   {
     "id": 235,
     "name": "Senna",
-    "description": "the Redeemer",
-    "alias": "Senna",
     "skinCollection": {
       "235000": "Senna",
       "235001": "True Damage Senna",
@@ -7925,8 +7665,6 @@
   {
     "id": 236,
     "name": "Lucian",
-    "description": "the Purifier",
-    "alias": "Lucian",
     "skinCollection": {
       "236000": "Lucian",
       "236001": "Lucian Tay Súng Đánh Thuê",
@@ -8006,8 +7744,6 @@
   {
     "id": 238,
     "name": "Zed",
-    "description": "the Master of Shadows",
-    "alias": "Zed",
     "skinCollection": {
       "238000": "Zed",
       "238001": "Zed Lôi Kiếm",
@@ -8085,8 +7821,6 @@
   {
     "id": 240,
     "name": "Kled",
-    "description": "the Cantankerous Cavalier",
-    "alias": "Kled",
     "skinCollection": {
       "240000": "Kled",
       "240001": "Sir Kled",
@@ -8120,8 +7854,6 @@
   {
     "id": 245,
     "name": "Ekko",
-    "description": "the Boy Who Shattered Time",
-    "alias": "Ekko",
     "skinCollection": {
       "245000": "Ekko",
       "245001": "Ekko Bão Cát",
@@ -8187,8 +7919,6 @@
   {
     "id": 246,
     "name": "Qiyana",
-    "description": "Empress of the Elements",
-    "alias": "Qiyana",
     "skinCollection": {
       "246000": "Qiyana",
       "246001": "Qiyana Trùm Phụ",
@@ -8246,8 +7976,6 @@
   {
     "id": 254,
     "name": "Vi",
-    "description": "the Piltover Enforcer",
-    "alias": "Vi",
     "skinCollection": {
       "254000": "Vi",
       "254001": "Vi Găng Độ Neon",
@@ -8305,8 +8033,6 @@
   {
     "id": 266,
     "name": "Aatrox",
-    "description": "the Darkin Blade",
-    "alias": "Aatrox",
     "skinCollection": {
       "266000": "Aatrox",
       "266001": "Aatrox Công Lý",
@@ -8354,8 +8080,6 @@
   {
     "id": 267,
     "name": "Nami",
-    "description": "the Tidecaller",
-    "alias": "Nami",
     "skinCollection": {
       "267000": "Nami",
       "267001": "Nami Tiểu Long Ngư",
@@ -8430,8 +8154,6 @@
   {
     "id": 268,
     "name": "Azir",
-    "description": "the Emperor of the Sands",
-    "alias": "Azir",
     "skinCollection": {
       "268000": "Azir",
       "268001": "Azir Ngân Hà",
@@ -8466,8 +8188,6 @@
   {
     "id": 350,
     "name": "Yuumi",
-    "description": "the Magical Cat",
-    "alias": "Yuumi",
     "skinCollection": {
       "350000": "Yuumi",
       "350001": "Yuumi Hiệu Trưởng Chiến Binh",
@@ -8544,8 +8264,6 @@
   {
     "id": 360,
     "name": "Samira",
-    "description": "the Desert Rose",
-    "alias": "Samira",
     "skinCollection": {
       "360000": "Samira",
       "360001": "Samira Đặc Vụ Siêu Linh",
@@ -8594,8 +8312,6 @@
   {
     "id": 412,
     "name": "Thresh",
-    "description": "the Chain Warden",
-    "alias": "Thresh",
     "skinCollection": {
       "412000": "Thresh",
       "412001": "Thresh Nỗi Sợ Sâu Thẳm",
@@ -8670,8 +8386,6 @@
   {
     "id": 420,
     "name": "Illaoi",
-    "description": "the Kraken Priestess",
-    "alias": "Illaoi",
     "skinCollection": {
       "420000": "Illaoi",
       "420001": "Illaoi Sứ Giả Hư Không",
@@ -8715,8 +8429,6 @@
   {
     "id": 421,
     "name": "Rek'Sai",
-    "description": "the Void Burrower",
-    "alias": "RekSai",
     "skinCollection": {
       "421000": "Rek'Sai",
       "421001": "Rek'Sai Bất Diệt",
@@ -8759,8 +8471,6 @@
   {
     "id": 427,
     "name": "Ivern",
-    "description": "the Green Father",
-    "alias": "Ivern",
     "skinCollection": {
       "427000": "Ivern",
       "427001": "Ivern Vua Kẹo",
@@ -8797,8 +8507,6 @@
   {
     "id": 429,
     "name": "Kalista",
-    "description": "the Spear of Vengeance",
-    "alias": "Kalista",
     "skinCollection": {
       "429000": "Kalista",
       "429001": "Kalista Huyết Nguyệt",
@@ -8838,8 +8546,6 @@
   {
     "id": 432,
     "name": "Bard",
-    "description": "the Wandering Caretaker",
-    "alias": "Bard",
     "skinCollection": {
       "432000": "Bard",
       "432001": "Bard Thần Rừng",
@@ -8892,8 +8598,6 @@
   {
     "id": 497,
     "name": "Rakan",
-    "description": "The Charmer",
-    "alias": "Rakan",
     "skinCollection": {
       "497000": "Rakan",
       "497001": "Rakan Bình Minh Vũ Trụ",
@@ -8958,8 +8662,6 @@
   {
     "id": 498,
     "name": "Xayah",
-    "description": "the Rebel",
-    "alias": "Xayah",
     "skinCollection": {
       "498000": "Xayah",
       "498001": "Xayah Hoàng Hôn Vũ Trụ",
@@ -9031,8 +8733,6 @@
   {
     "id": 516,
     "name": "Ornn",
-    "description": "The Fire below the Mountain",
-    "alias": "Ornn",
     "skinCollection": {
       "516000": "Ornn",
       "516001": "Ornn Thần Sấm",
@@ -9077,8 +8777,6 @@
   {
     "id": 517,
     "name": "Sylas",
-    "description": "the Unshackled",
-    "alias": "Sylas",
     "skinCollection": {
       "517000": "Sylas",
       "517001": "Sylas Nguyệt Hồn",
@@ -9139,8 +8837,6 @@
   {
     "id": 518,
     "name": "Neeko",
-    "description": "the Curious Chameleon",
-    "alias": "Neeko",
     "skinCollection": {
       "518000": "Neeko",
       "518001": "Neeko Mùa Đông Kỳ Diệu",
@@ -9197,8 +8893,6 @@
   {
     "id": 523,
     "name": "Aphelios",
-    "description": "the Weapon of the Faithful",
-    "alias": "Aphelios",
     "skinCollection": {
       "523000": "Aphelios",
       "523001": "Aphelios Ma Sứ",
@@ -9245,8 +8939,6 @@
   {
     "id": 526,
     "name": "Rell",
-    "description": "the Iron Maiden",
-    "alias": "Rell",
     "skinCollection": {
       "526000": "Rell",
       "526001": "Rell Nữ Thần Chiến Binh",
@@ -9284,8 +8976,6 @@
   {
     "id": 555,
     "name": "Pyke",
-    "description": "the Bloodharbor Ripper",
-    "alias": "Pyke",
     "skinCollection": {
       "555000": "Pyke",
       "555001": "Pyke Hồn Ma Sa Mạc",
@@ -9377,8 +9067,6 @@
   {
     "id": 711,
     "name": "Vex",
-    "description": "the Gloomist",
-    "alias": "Vex",
     "skinCollection": {
       "711000": "Vex",
       "711001": "Vex Thần Sứ",
@@ -9414,8 +9102,6 @@
   {
     "id": 777,
     "name": "Yone",
-    "description": "the Unforgotten",
-    "alias": "Yone",
     "skinCollection": {
       "777000": "Yone",
       "777001": "Yone Tà Ảnh Song Kiếm",
@@ -9498,8 +9184,6 @@
   {
     "id": 799,
     "name": "Ambessa",
-    "description": "Matriarch of War",
-    "alias": "Ambessa",
     "skinCollection": {
       "799000": "Ambessa",
       "799001": "Ambessa Anh Linh Chiến Lang",
@@ -9514,8 +9198,6 @@
   {
     "id": 800,
     "name": "Mel",
-    "description": "the Soul's Reflection",
-    "alias": "Mel",
     "skinCollection": {
       "800000": "Mel",
       "800001": "Arcane Mel Ủy Viên Hội Đồng",
@@ -9534,8 +9216,6 @@
   {
     "id": 804,
     "name": "Yunara",
-    "description": "the Unbroken Faith",
-    "alias": "Yunara",
     "skinCollection": {
       "804000": "Yunara",
       "804001": "Yunara Suối Nước Nóng",
@@ -9552,8 +9232,6 @@
   {
     "id": 875,
     "name": "Sett",
-    "description": "the Boss",
-    "alias": "Sett",
     "skinCollection": {
       "875000": "Sett",
       "875001": "Sett Loạn Thế Thần Binh",
@@ -9636,8 +9314,6 @@
   {
     "id": 876,
     "name": "Lillia",
-    "description": "the Bashful Bloom",
-    "alias": "Lillia",
     "skinCollection": {
       "876000": "Lillia",
       "876001": "Lillia Mộng Tưởng Tiên Nữ",
@@ -9690,8 +9366,6 @@
   {
     "id": 887,
     "name": "Gwen",
-    "description": "The Hallowed Seamstress",
-    "alias": "Gwen",
     "skinCollection": {
       "887000": "Gwen",
       "887001": "Gwen Chị Kéo Hồng ",
@@ -9746,8 +9420,6 @@
   {
     "id": 888,
     "name": "Renata Glasc",
-    "description": "the Chem-Baroness",
-    "alias": "Renata",
     "skinCollection": {
       "888000": "Renata Glasc",
       "888001": "Đại Đô Đốc Glasc",
@@ -9786,8 +9458,6 @@
   {
     "id": 893,
     "name": "Aurora",
-    "description": "the Witch Between Worlds",
-    "alias": "Aurora",
     "skinCollection": {
       "893000": "Aurora",
       "893001": "Aurora Thỏ Chuyên Viên",
@@ -9814,8 +9484,6 @@
   {
     "id": 895,
     "name": "Nilah",
-    "description": "the Joy Unbound",
-    "alias": "Nilah",
     "skinCollection": {
       "895000": "Nilah",
       "895001": "Nilah Vệ Binh Tinh Tú",
@@ -9852,8 +9520,6 @@
   {
     "id": 897,
     "name": "K'Sante",
-    "description": "the Pride of Nazumah",
-    "alias": "KSante",
     "skinCollection": {
       "897000": "K'Sante",
       "897001": "K'Sante Bóng Ma Hỏa Ảnh",
@@ -9878,8 +9544,6 @@
   {
     "id": 901,
     "name": "Smolder",
-    "description": "the Fiery Fledgling",
-    "alias": "Smolder",
     "skinCollection": {
       "901000": "Smolder",
       "901001": "Smolder Thiên Cung Thần Long",
@@ -9906,8 +9570,6 @@
   {
     "id": 902,
     "name": "Milio",
-    "description": "The Gentle Flame",
-    "alias": "Milio",
     "skinCollection": {
       "902000": "Milio",
       "902001": "Milio Tiên Linh Pháp Sư",
@@ -9943,8 +9605,6 @@
   {
     "id": 904,
     "name": "Zaahen",
-    "description": "The Unsundered",
-    "alias": "Zaahen",
     "skinCollection": {
       "904000": "Zaahen",
       "904001": "Zaahen Long Đao",
@@ -9961,8 +9621,6 @@
   {
     "id": 910,
     "name": "Hwei",
-    "description": "the Visionary",
-    "alias": "Hwei",
     "skinCollection": {
       "910000": "Hwei",
       "910001": "Hwei Sứ Giả Xứ Tuyết",
@@ -9990,8 +9648,6 @@
   {
     "id": 950,
     "name": "Naafiri",
-    "description": "the Hound of a Hundred Bites",
-    "alias": "Naafiri",
     "skinCollection": {
       "950000": "Naafiri",
       "950001": "Naafiri Linh Khuyển Tinh Võ",

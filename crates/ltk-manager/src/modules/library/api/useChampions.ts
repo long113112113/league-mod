@@ -18,18 +18,21 @@ export function useChampions() {
     });
 }
 
-export function useChampionIcon(championId: number) {
+
+
+
+
+export function useChampionSkins(championId: number, enabled: boolean = true) {
     return useQuery({
-        queryKey: ["champion-icon", championId],
+        queryKey: ["champion-skins", championId],
         queryFn: async () => {
-            const result = await api.getChampionIconData(championId);
+            const result = await api.getChampionSkins(championId);
             if (result.ok) {
                 return result.value;
             }
-            return null;
+            throw result.error;
         },
-        staleTime: Infinity, // Icons don't change often
-        enabled: !!championId,
+        enabled: enabled && !!championId,
     });
 }
 

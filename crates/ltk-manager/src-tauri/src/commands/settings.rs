@@ -34,6 +34,13 @@ fn save_settings_inner(
 ) -> AppResult<()> {
     save_settings_to_disk(app_handle, &settings)?;
 
+    // Dynamically update fs scope if workspace path is set
+    if let Some(path) = &settings.workspace_path {
+        use tauri_plugin_fs::FsExt;
+        let _ = app_handle.fs_scope().allow_directory(path, true);
+        tracing::info!("Updated fs scope for workspace path: {:?}", path);
+    }
+
     let mut current = state
         .0
         .lock()

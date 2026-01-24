@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import { LuSearch } from "react-icons/lu";
 
@@ -6,13 +7,12 @@ import { ChampionCard } from "@/components/ChampionCard";
 import { useChampions } from "@/modules/library/api/useChampions";
 import type { AppError } from "@/lib/tauri";
 
-export function ChampionGrid() {
+export function ChampionGrid({ onSelectChampion }: { onSelectChampion?: (champion: any) => void }) {
     const [searchQuery, setSearchQuery] = useState("");
     const { data: champions = [], isLoading, error } = useChampions();
 
     const filteredChampions = champions.filter((champion) =>
-        champion.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        champion.alias.toLowerCase().includes(searchQuery.toLowerCase())
+        champion.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (isLoading) {
@@ -46,7 +46,11 @@ export function ChampionGrid() {
             <div className="flex-1 overflow-auto p-6">
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                     {filteredChampions.map((champion) => (
-                        <ChampionCard key={champion.id} champion={champion} />
+                        <ChampionCard
+                            key={champion.id}
+                            champion={champion}
+                            onClick={onSelectChampion}
+                        />
                     ))}
                 </div>
 

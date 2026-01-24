@@ -1902,6 +1902,16 @@ dependencies = [
 
 [[package]]
 name = "gif"
+version = "0.13.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ae047235e33e2829703574b54fdec96bfbad892062d97fed2f76022287de61b"
+dependencies = [
+ "color_quant",
+ "weezl",
+]
+
+[[package]]
+name = "gif"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f954a9e9159ec994f73a30a12b96a702dde78f5547bcb561174597924f7d4162"
@@ -2419,6 +2429,24 @@ dependencies = [
 
 [[package]]
 name = "image"
+version = "0.24.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5690139d2f55868e080017335e4b94cb7414274c74f1669c84fb5feba2c9f69d"
+dependencies = [
+ "bytemuck",
+ "byteorder",
+ "color_quant",
+ "exr",
+ "gif 0.13.3",
+ "jpeg-decoder",
+ "num-traits",
+ "png 0.17.16",
+ "qoi",
+ "tiff 0.9.1",
+]
+
+[[package]]
+name = "image"
 version = "0.25.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6506c6c10786659413faa717ceebcb8f70731c0a60cbae39795fdf114519c1a"
@@ -2427,7 +2455,7 @@ dependencies = [
  "byteorder-lite",
  "color_quant",
  "exr",
- "gif",
+ "gif 0.14.0",
  "image-webp",
  "moxcms",
  "num-traits",
@@ -2436,7 +2464,7 @@ dependencies = [
  "ravif",
  "rayon",
  "rgb",
- "tiff",
+ "tiff 0.10.3",
  "zune-core 0.5.0",
  "zune-jpeg 0.5.5",
 ]
@@ -2461,7 +2489,7 @@ dependencies = [
  "bytemuck",
  "ddsfile",
  "half",
- "image",
+ "image 0.25.9",
  "thiserror 1.0.69",
 ]
 
@@ -2665,6 +2693,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "jpeg-decoder"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "00810f1d8b74be64b13dbf3db89ac67740615d6c891f0e7b6179326533011a07"
+dependencies = [
+ "rayon",
+]
+
+[[package]]
 name = "js-sys"
 version = "0.3.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2747,7 +2784,7 @@ dependencies = [
  "colored",
  "directories-next",
  "glob",
- "image",
+ "image 0.25.9",
  "inquire",
  "ltk_fantome",
  "ltk_mod_core",
@@ -2925,6 +2962,7 @@ dependencies = [
  "base64 0.22.1",
  "camino",
  "chrono",
+ "image 0.24.9",
  "league-toolkit",
  "libloading 0.9.0",
  "ltk_mod_core",
@@ -2945,7 +2983,6 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -2970,7 +3007,7 @@ version = "0.1.4"
 dependencies = [
  "camino",
  "eyre",
- "image",
+ "image 0.25.9",
  "itertools",
  "ltk_mod_project",
  "ltk_wad",
@@ -3087,7 +3124,7 @@ dependencies = [
  "byteorder",
  "camino",
  "glob",
- "image",
+ "image 0.25.9",
  "itertools",
  "ltk_io_ext 0.2.1",
  "ltk_mod_project",
@@ -3155,7 +3192,7 @@ dependencies = [
  "bitflags 2.10.0",
  "byteorder",
  "ddsfile",
- "image",
+ "image 0.25.9",
  "image_dds",
  "ltk_io_ext 0.4.0",
  "num_enum",
@@ -6348,6 +6385,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f60246a4944f24f6e018aa17cdeffb7818b76356965d03b07d6a9886e8962185"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "tiff"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba1310fcea54c6a9a4fd1aad794ecc02c31682f6bfbecdf460bf19533eed1e3e"
+dependencies = [
+ "flate2",
+ "jpeg-decoder",
+ "weezl",
 ]
 
 [[package]]

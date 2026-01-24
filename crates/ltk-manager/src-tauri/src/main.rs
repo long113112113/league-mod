@@ -4,6 +4,7 @@
 )]
 
 use tauri::Manager;
+use tauri_plugin_fs::FsExt;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod commands;
@@ -84,6 +85,14 @@ fn main() {
             // Run first-run initialization (auto-detect League path)
             initialize_first_run(app_handle, &settings_state);
 
+            // Dynamically allow workspace path in fs scope
+            if let Ok(settings) = settings_state.0.lock() {
+                if let Some(path) = &settings.workspace_path {
+                    let _ = app.fs_scope().allow_directory(path, true);
+                    tracing::info!("Allowed workspace path in fs scope: {:?}", path);
+                }
+            }
+
             // Manage each state separately
             app.manage(settings_state);
             app.manage(patcher_state);
@@ -91,7 +100,7 @@ fn main() {
             // Auto-check for database updates in background
             let app_handle_clone = app_handle.clone();
             tauri::async_runtime::spawn(async move {
-                match commands::check_and_update_database(app_handle_clone).await {
+                match commands::check_and_update_database(app_handle_clone.clone()).await {
                     IpcResult::Ok { value } => {
                         tracing::info!("Database check complete: {}", value.message);
                     }
@@ -120,8 +129,13 @@ fn main() {
             commands::refresh_skin_database,
             commands::get_skin_database,
             commands::get_champions_with_skins,
-            commands::get_champion_icon_data,
             commands::check_and_update_database,
+            commands::get_champion_skins,
+            // Merge Data
+            commands::prune_all_metadata,
+            // Images
+            commands::download_champion_images,
+            commands::get_skin_image,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
