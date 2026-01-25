@@ -139,6 +139,7 @@ fn main() {
             // Mod Skin
             commands::mod_skin::download_skin,
             commands::mod_skin::run_skin,
+            commands::mod_skin::stop_all_mods,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

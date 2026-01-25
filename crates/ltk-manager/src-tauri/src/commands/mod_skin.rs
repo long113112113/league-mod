@@ -68,25 +68,48 @@ async fn download_skin_inner(
             skin_id, extract_to
         ));
     }
-    let url = format!(
-        "https://github.com/Alban1911/LeagueSkins/raw/main/skins/{}/{}/{}.zip",
-        champion_id, skin_id, skin_id
-    );
-    info!("Download URL: {}", url);
-
-    let file_path = champion_dir.join(format!("{}.zip", skin_id));
-
     let client = reqwest::Client::new();
-    let response = client.get(&url).send().await?;
+    let extensions = ["zip", "fantome"];
+    let mut final_response = None;
+    let mut file_path = PathBuf::new();
+    let mut worked_url = String::new();
 
-    if !response.status().is_success() {
-        return Err(anyhow::anyhow!(
-            "Failed to download skin zip. Status: {}",
-            response.status()
-        ));
+    for ext in extensions {
+        let url = format!(
+            "https://github.com/Alban1911/LeagueSkins/raw/main/skins/{}/{}/{}.{}",
+            champion_id, skin_id, skin_id, ext
+        );
+        info!("Checking URL: {}", url);
+
+        // We use a match to safely handle potential network errors on a per-attempt basis if needed,
+        // but here we primarily care about the status code.
+        match client.get(&url).send().await {
+            Ok(res) => {
+                if res.status().is_success() {
+                    final_response = Some(res);
+                    file_path = champion_dir.join(format!("{}.{}", skin_id, ext));
+                    worked_url = url;
+                    break;
+                }
+            }
+            Err(e) => {
+                warn!("Failed to request {}: {}", url, e);
+                // Continue to try the next extension
+            }
+        }
     }
+
+    let response = final_response.ok_or_else(|| {
+        anyhow::anyhow!(
+            "Failed to download skin (checked zip and fantome) for champion {} skin {}",
+            champion_id,
+            skin_id
+        )
+    })?;
+
     info!(
-        "Download connection established, status: {}",
+        "Download connection established: {}, status: {}",
+        worked_url,
         response.status()
     );
 
@@ -144,33 +167,34 @@ pub async fn run_skin(
     champion_id: i32,
     skin_id: i32,
 ) -> IpcResult<String> {
-    // We no longer use PatcherState directly here as we delegate to mod-tools
-    // But we might want to ensure no compatible patcher is running?
-    // For now, let's keep the signature but ignore patcher_state logic for the start.
-    // 0. Cancel previous operation
     {
-        let patcher_state_arc = app_handle.state::<PatcherState>();
-        let mut patcher_state = match patcher_state_arc.0.lock() {
-            Ok(state) => state,
-            Err(e) => {
-                return IpcResult::Err {
-                    error: crate::error::AppErrorResponse::new(
-                        crate::error::ErrorCode::Unknown,
-                        format!("Failed to lock patcher state: {}", e),
-                    ),
-                };
+        let child_process_to_kill = {
+            let patcher_state_arc = app_handle.state::<PatcherState>();
+            let mut patcher_state = match patcher_state_arc.0.lock() {
+                Ok(state) => state,
+                Err(e) => {
+                    return IpcResult::Err {
+                        error: crate::error::AppErrorResponse::new(
+                            crate::error::ErrorCode::Unknown,
+                            format!("Failed to lock patcher state: {}", e),
+                        ),
+                    };
+                }
+            };
+
+            // Cancel token
+            if let Some(token) = patcher_state.cancel_token.take() {
+                token.cancel();
+                info!("Cancelled previous operation token");
             }
+
+            patcher_state.child_process.take()
         };
 
-        // Cancel token
-        if let Some(token) = patcher_state.cancel_token.take() {
-            token.cancel();
-            info!("Cancelled previous operation token");
-        }
-
-        // Kill child process
-        if let Some(mut child) = patcher_state.child_process.take() {
+        // Kill child process outside lock
+        if let Some(mut child) = child_process_to_kill {
             let _ = child.start_kill(); // fast kill
+            let _ = child.wait().await; // Ensure it's dead
             info!("Killed previous mod-tools process");
         }
     }
@@ -203,6 +227,47 @@ pub async fn run_skin(
                     format!("{:#}", e),
                 ),
             }
+        }
+    }
+}
+
+#[command]
+pub async fn stop_all_mods(app_handle: tauri::AppHandle) -> IpcResult<String> {
+    let patcher_state_arc = app_handle.state::<PatcherState>();
+
+    // We need to take the child process out of the state to kill it
+    let child_proc = {
+        let mut patcher_state = match patcher_state_arc.0.lock() {
+            Ok(state) => state,
+            Err(e) => {
+                return IpcResult::Err {
+                    error: crate::error::AppErrorResponse::new(
+                        crate::error::ErrorCode::Unknown,
+                        format!("Failed to lock patcher state: {}", e),
+                    ),
+                };
+            }
+        };
+
+        // Cancel token
+        if let Some(token) = patcher_state.cancel_token.take() {
+            token.cancel();
+            info!("Cancelled operation token");
+        }
+
+        patcher_state.child_process.take()
+    };
+
+    if let Some(mut child) = child_proc {
+        let _ = child.start_kill();
+        let _ = child.wait().await;
+        info!("Stopped mod-tools process");
+        IpcResult::Ok {
+            value: "Mods stopped".to_string(),
+        }
+    } else {
+        IpcResult::Ok {
+            value: "No mods running".to_string(),
         }
     }
 }

@@ -36,7 +36,7 @@ export function ChampionGrid({ onSelectChampion }: { onSelectChampion?: (champio
                         placeholder="Search champions..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-lg border border-surface-600 bg-night-500 py-2 pr-4 pl-10 text-surface-100 placeholder:text-surface-500 focus:border-transparent focus:ring-2 focus:ring-brand-500 focus:outline-none"
+                        className="w-full rounded-none border border-surface-600 bg-night-500 py-2 pr-4 pl-10 text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:outline-none"
                     />
                 </div>
                 <div className="text-sm text-surface-400">

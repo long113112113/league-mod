@@ -151,16 +151,35 @@ export function Library() {
           </div>
         </div>
 
-        <Button
-          variant="filled"
-          onClick={handleInstallMod}
-          loading={installMod.isPending}
-          left={<LuPlus className="h-4 w-4" />}
-          className={activeTab === "mods" ? "" : "invisible pointer-events-none"}
-          tabIndex={activeTab === "mods" ? 0 : -1}
-        >
-          {installMod.isPending ? "Installing..." : "Add Mod"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {activeTabId === "champions" && (
+            <Button
+              variant="outline"
+              onClick={async () => {
+                try {
+                  const { invoke } = await import("@tauri-apps/api/core");
+                  await invoke("stop_all_mods");
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
+              className="text-red-400 border-red-400/20 hover:bg-red-500/10"
+            >
+              Kill All
+            </Button>
+          )}
+
+          <Button
+            variant="filled"
+            onClick={handleInstallMod}
+            loading={installMod.isPending}
+            left={<LuPlus className="h-4 w-4" />}
+            className={activeTab === "mods" ? "" : "invisible pointer-events-none"}
+            tabIndex={activeTab === "mods" ? 0 : -1}
+          >
+            {installMod.isPending ? "Installing..." : "Add Mod"}
+          </Button>
+        </div>
       </header>
 
       {/* Content based on tab */}
@@ -181,7 +200,7 @@ export function Library() {
                   placeholder="Search mods..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border border-surface-600 bg-night-500 py-2 pr-4 pl-10 text-surface-100 placeholder:text-surface-500 focus:border-transparent focus:ring-2 focus:ring-brand-500 focus:outline-none"
+                  className="w-full rounded-none border border-surface-600 bg-night-500 py-2 pr-4 pl-10 text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:outline-none"
                 />
               </div>
 
